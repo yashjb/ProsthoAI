@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-gradient-from: #f8fafc;
+  --bg-gradient-to: #eff6ff;
+}
+
+.dark {
+  --bg-gradient-from: #0f172a;
+  --bg-gradient-to: #1e293b;
+}
+
+body {
+  @apply bg-gradient-to-br from-[var(--bg-gradient-from)] to-[var(--bg-gradient-to)] min-h-screen text-slate-800 dark:text-slate-200;
+}
+
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+}
