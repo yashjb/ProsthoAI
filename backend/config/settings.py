@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     """Global application settings."""
 
     openai_api_key: str
-    openai_model: str = "gpt-4o"
+    openai_model: str = "gpt-5.4"
     openai_max_tokens: int = 8192
     openai_temperature: float = 0.2
 
