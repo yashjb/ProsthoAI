@@ -30,13 +30,19 @@ def call_openai(messages: list[dict[str, str]]) -> str:
     client = _get_client()
     logger.info("Calling OpenAI model=%s", settings.openai_model)
 
-    response = client.chat.completions.create(
-        model=settings.openai_model,
-        messages=messages,
-        max_tokens=settings.openai_max_tokens,
-        temperature=settings.openai_temperature,
-        response_format={"type": "json_object"},
-    )
+    kwargs = {
+        "model": settings.openai_model,
+        "messages": messages,
+        "temperature": settings.openai_temperature,
+        "response_format": {"type": "json_object"},
+    }
+    
+    if settings.openai_model.startswith("gpt-5") or settings.openai_model.startswith("o"):
+        kwargs["max_completion_tokens"] = settings.openai_max_tokens
+    else:
+        kwargs["max_tokens"] = settings.openai_max_tokens
+
+    response = client.chat.completions.create(**kwargs)
 
     content = response.choices[0].message.content
     if not content:
