@@ -48,6 +48,28 @@ export const emptyCaseInput: CaseInput = {
   additional_notes: '',
 };
 
+export interface ClinicalPhotos {
+  extraoral_smile?: File;
+  intraoral_cheek_retracted?: File;
+  maxillary_arch?: File;
+  mandibular_arch?: File;
+  occlusion_left_lateral?: File;
+  occlusion_right_lateral?: File;
+  occlusion_frontal?: File;
+  cbct_dicom?: File;
+}
+
+export const clinicalPhotoFields: { key: keyof ClinicalPhotos; label: string; accept: string; group?: string }[] = [
+  { key: 'extraoral_smile', label: '1. Extraoral photograph with smile', accept: 'image/*' },
+  { key: 'intraoral_cheek_retracted', label: '2. Intraoral photograph with cheek retracted', accept: 'image/*' },
+  { key: 'maxillary_arch', label: '3. Maxillary arch photograph', accept: 'image/*' },
+  { key: 'mandibular_arch', label: '4. Mandibular arch photograph', accept: 'image/*' },
+  { key: 'occlusion_left_lateral', label: '5a. Occlusion — Left lateral', accept: 'image/*', group: 'Photograph in occlusion' },
+  { key: 'occlusion_right_lateral', label: '5b. Occlusion — Right lateral', accept: 'image/*', group: 'Photograph in occlusion' },
+  { key: 'occlusion_frontal', label: '5c. Occlusion — Frontal view', accept: 'image/*', group: 'Photograph in occlusion' },
+  { key: 'cbct_dicom', label: '6. CBCT (DICOM file) for implant cases', accept: '.dcm,.dicom,application/dicom,image/*' },
+];
+
 export interface TreatmentPhase {
   phase_name: string;
   steps: string[];
