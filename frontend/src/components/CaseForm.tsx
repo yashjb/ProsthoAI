@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Send, Loader2 } from 'lucide-react';
-import type { CaseInput } from '../types';
+import type { CaseInput, ClinicalPhotos } from '../types';
 import { emptyCaseInput } from '../types';
 import PdfUpload from './PdfUpload';
+import ClinicalPhotosUpload from './ClinicalPhotosUpload';
 
 interface Props {
-  onSubmit: (caseData: CaseInput, files: File[]) => void;
+  onSubmit: (caseData: CaseInput, files: File[], photos: ClinicalPhotos) => void;
   loading: boolean;
 }
 
@@ -178,13 +179,14 @@ const SECTIONS: { title: string; fields: FieldDef[] }[] = [
 export default function CaseForm({ onSubmit, loading }: Props) {
   const [form, setForm] = useState<CaseInput>(emptyCaseInput);
   const [files, setFiles] = useState<File[]>([]);
+  const [photos, setPhotos] = useState<ClinicalPhotos>({});
 
   const set = (key: keyof CaseInput, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(form, files);
+    onSubmit(form, files, photos);
   };
 
   return (
@@ -192,6 +194,11 @@ export default function CaseForm({ onSubmit, loading }: Props) {
       {/* PDF Upload */}
       <div className="bg-white dark:bg-slate-800/60 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
         <PdfUpload files={files} onChange={setFiles} />
+      </div>
+
+      {/* Clinical Photographs & Imaging */}
+      <div className="bg-white dark:bg-slate-800/60 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+        <ClinicalPhotosUpload photos={photos} onChange={setPhotos} />
       </div>
 
       {/* Case Sections */}
