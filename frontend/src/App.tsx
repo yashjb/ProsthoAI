@@ -4,7 +4,7 @@ import CaseForm from './components/CaseForm';
 import ResultsView from './components/ResultsView';
 import LoadingState from './components/LoadingState';
 import { analyzeCase } from './api';
-import type { CaseInput, TreatmentResponse } from './types';
+import type { CaseInput, ClinicalPhotos, TreatmentResponse } from './types';
 
 type View = 'form' | 'loading' | 'results';
 
@@ -23,11 +23,11 @@ export default function App() {
     document.documentElement.classList.toggle('dark', dark);
   }, [dark]);
 
-  const handleSubmit = async (caseData: CaseInput, files: File[]) => {
+  const handleSubmit = async (caseData: CaseInput, files: File[], photos: ClinicalPhotos) => {
     setView('loading');
     setError(null);
     try {
-      const res = await analyzeCase(caseData, files);
+      const res = await analyzeCase(caseData, files, photos);
       if (res.success && res.data) {
         setResult(res.data);
         setView('results');
