@@ -290,3 +290,10 @@ curl -X POST http://localhost:8000/api/analyze \
 - **Cost estimation module** — integrate regional pricing data
 - **Template cases** — pre-fill common prosthodontic scenarios
 - **Audit logging** — optional session logging for quality assurance
+- **Offline mode** — cache common references for use without internet
+
+---
+
+## License
+
+MIT
