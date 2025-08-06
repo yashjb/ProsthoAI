@@ -2,9 +2,12 @@
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 .env
 venv/
 .venv/
+*.egg-info/
+.pytest_cache/
 
 # Node
 node_modules/
@@ -20,3 +23,7 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+dental pdf
+answer*.md
+start.txt
+dental_knowledge.db
