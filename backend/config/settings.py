@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     openai_max_tokens: int = 32768
     openai_temperature: float = 0.2
 
+    # Rate limiting
+    max_requests_per_minute: int = 10
+
     # Embedding & vision models
     embedding_model: str = "text-embedding-3-small"
     vision_model: str = "gpt-5.4"
