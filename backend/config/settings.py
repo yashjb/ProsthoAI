@@ -30,6 +30,10 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = 100
     max_context_chunks: int = 20
 
+    # PDF processing
+    max_pdf_size_mb: int = 20
+    max_pdfs_per_request: int = 5
+
     # Image processing
     max_image_dimension: int = 2048
     image_quality: int = 85
