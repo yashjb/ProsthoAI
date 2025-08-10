@@ -32,6 +32,8 @@ app = FastAPI(
     title="ProsthoAI — Treatment Planning Assistant",
     version="1.0.0",
     description="AI-powered prosthodontic clinical decision-support tool.",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
     lifespan=lifespan,
 )
 
