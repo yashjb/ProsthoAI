@@ -20,6 +20,7 @@ logging.basicConfig(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Application lifespan manager for startup and shutdown tasks."""
     # ── Startup: pre-load and chunk all dental PDFs ──────────────────────
     from services.pdf_cache import initialize_pdf_cache
 
