@@ -154,6 +154,12 @@ The user prompt includes:
 - Node.js 18+
 - OpenAI API key
 
+### Quick Start
+
+1. Clone the repository
+2. Set up backend and frontend (see below)
+3. Access the application at http://localhost:5173
+
 ### Backend Setup
 
 ```bash
