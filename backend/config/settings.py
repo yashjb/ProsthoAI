@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-4o"
     openai_max_tokens: int = 32768
     openai_temperature: float = 0.2
+    openai_timeout: int = 120
 
     # Rate limiting
     max_requests_per_minute: int = 10
