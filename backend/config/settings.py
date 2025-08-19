@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     vision_model: str = "gpt-5.4"
     embedding_dimensions: int = 1536
 
+    # Logging
+    log_level: str = "INFO"
+
     # PDF knowledge-base folder (pre-loaded at startup)
     dental_pdf_folder: str = os.path.join(_PROJECT_ROOT, "dental pdf")
 
