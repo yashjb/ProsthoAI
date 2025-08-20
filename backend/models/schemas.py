@@ -201,6 +201,15 @@ class TreatmentResponse(BaseModel):
     confidence_level: str = "medium"
     disclaimer: str = ""
 
+    class Config:
+        """Pydantic model configuration."""
+        json_schema_extra = {
+            "example": {
+                "case_summary": "Brief clinical summary",
+                "confidence_level": "high"
+            }
+        }
+
 
 class APIResponse(BaseModel):
     """Wrapper returned to the frontend."""
