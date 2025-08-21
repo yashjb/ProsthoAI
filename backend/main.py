@@ -53,8 +53,10 @@ app.include_router(router, prefix="/api")
 @app.get("/health")
 async def health():
     """Health check endpoint with basic system info."""
+    import sys
     return {
         "status": "ok",
         "version": "1.0.0",
-        "model": settings.openai_model
+        "model": settings.openai_model,
+        "python_version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
     }
