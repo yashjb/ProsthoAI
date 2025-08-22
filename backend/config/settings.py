@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     openai_timeout: int = 120
 
     # Rate limiting
-    max_requests_per_minute: int = 10
+    max_requests_per_minute: int = 15
 
     # Embedding & vision models
     embedding_model: str = "text-embedding-3-small"
