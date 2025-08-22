@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import type { CaseInput, ClinicalPhotos } from '../types';
 import { emptyCaseInput } from '../types';
-import PdfUpload from './PdfUpload';
 import ClinicalPhotosUpload from './ClinicalPhotosUpload';
 
 interface Props {
-  onSubmit: (caseData: CaseInput, files: File[], photos: ClinicalPhotos) => void;
+  onSubmit: (caseData: CaseInput, photos: ClinicalPhotos) => void;
   loading: boolean;
 }
 
@@ -178,7 +177,6 @@ const SECTIONS: { title: string; fields: FieldDef[] }[] = [
 
 export default function CaseForm({ onSubmit, loading }: Props) {
   const [form, setForm] = useState<CaseInput>(emptyCaseInput);
-  const [files, setFiles] = useState<File[]>([]);
   const [photos, setPhotos] = useState<ClinicalPhotos>({});
 
   const set = (key: keyof CaseInput, value: string) =>
@@ -186,16 +184,11 @@ export default function CaseForm({ onSubmit, loading }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(form, files, photos);
+    onSubmit(form, photos);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {/* PDF Upload */}
-      <div className="bg-white dark:bg-slate-800/60 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-        <PdfUpload files={files} onChange={setFiles} />
-      </div>
-
       {/* Clinical Photographs & Imaging */}
       <div className="bg-white dark:bg-slate-800/60 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
         <ClinicalPhotosUpload photos={photos} onChange={setPhotos} />
@@ -247,7 +240,7 @@ export default function CaseForm({ onSubmit, loading }: Props) {
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-lg shadow-primary-500/25 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-lg shadow-primary-500/25 disabled:opacity-60 disabled:cursor-not-allowed transition-all hover:shadow-xl hover:shadow-primary-500/30"
         >
           {loading ? (
             <>
