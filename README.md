@@ -286,7 +286,7 @@ curl -X POST http://localhost:8000/api/analyze \
 
 ## Future Improvements
 
-- **Image upload support** — CBCT/radiograph analysis via vision models
+- **Image upload support** — Clinical photograph analysis via vision models (IN PROGRESS)
 - **Multi-turn conversation** — refine the plan iteratively
 - **Export to PDF** — generate a printable treatment plan document
 - **Voice input** — dictate case details for faster entry
