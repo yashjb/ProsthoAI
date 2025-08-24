@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     max_context_chunks: int = 20
     min_chunk_tokens: int = 50
 
+    # Retrieval
+    retrieval_top_k: int = 20
+
     # PDF processing
     max_pdf_size_mb: int = 20
     max_pdfs_per_request: int = 5
