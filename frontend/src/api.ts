@@ -4,12 +4,10 @@ const API_BASE = '/api';
 
 export async function analyzeCase(
   caseData: CaseInput,
-  files: File[],
   photos: ClinicalPhotos = {},
 ): Promise<APIResponse> {
   const formData = new FormData();
   formData.append('case_data', JSON.stringify(caseData));
-  files.forEach((f) => formData.append('files', f));
 
   // Append clinical photographs
   for (const [key, file] of Object.entries(photos)) {
