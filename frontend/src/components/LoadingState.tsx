@@ -1,7 +1,7 @@
 import { Loader2, Brain, FileSearch, Stethoscope } from 'lucide-react';
 
 const steps = [
-  { icon: FileSearch, text: 'Extracting PDF content…' },
+  { icon: FileSearch, text: 'Extracting reference material…' },
   { icon: Brain, text: 'Analyzing clinical data…' },
   { icon: Stethoscope, text: 'Generating treatment plan…' },
 ];
