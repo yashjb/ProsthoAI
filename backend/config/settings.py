@@ -48,6 +48,7 @@ class Settings(BaseSettings):
     max_image_dimension: int = 2048
     image_quality: int = 85
     supported_image_formats: list[str] = ["jpg", "jpeg", "png", "webp"]
+    max_images_per_request: int = 10
 
     cors_origins: list[str] = ["http://localhost:5173", "http://localhost:3000"]
 
