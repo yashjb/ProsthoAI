@@ -26,6 +26,7 @@ class Settings(BaseSettings):
 
     # Logging
     log_level: str = "INFO"
+    log_format: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
     # PDF knowledge-base folder (pre-loaded at startup)
     dental_pdf_folder: str = os.path.join(_PROJECT_ROOT, "dental pdf")
