@@ -64,5 +64,10 @@ def retrieve_relevant_chunks(
     else:
         result = [c for _, c in scored[:top_k]]
 
-    logger.info("Retrieved %d relevant chunks (from %d total)", len(result), len(chunks))
+    logger.info(
+        "Retrieved %d relevant chunks (from %d total, top_k=%d)",
+        len(result),
+        len(chunks),
+        top_k,
+    )
     return result
