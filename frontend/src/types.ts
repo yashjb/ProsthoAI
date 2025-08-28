@@ -67,18 +67,65 @@ export const clinicalPhotoFields: { key: keyof ClinicalPhotos; label: string; ac
   { key: 'occlusion_left_lateral', label: '5a. Occlusion — Left lateral', accept: 'image/*', group: 'Photograph in occlusion' },
   { key: 'occlusion_right_lateral', label: '5b. Occlusion — Right lateral', accept: 'image/*', group: 'Photograph in occlusion' },
   { key: 'occlusion_frontal', label: '5c. Occlusion — Frontal view', accept: 'image/*', group: 'Photograph in occlusion' },
-  { key: 'cbct_dicom', label: '6. CBCT (DICOM file) for implant cases', accept: '.dcm,.dicom,application/dicom,image/*' },
+  { key: 'cbct_dicom', label: '6. CBCT (DICOM file) for implant cases', accept: '.dcm,.dicom,application/dicom' },
 ];
+
+export interface TreatmentStep {
+  step_number: number;
+  what_is_done: string;
+  why_it_is_done: string;
+  clinical_procedure_details: string;
+  investigations_and_materials: string;
+  precautions: string[];
+  common_errors_to_avoid: string[];
+  pdf_references: string[];
+}
 
 export interface TreatmentPhase {
   phase_name: string;
-  steps: string[];
-  rationale: string;
+  steps: TreatmentStep[];
 }
 
-export interface RecommendedTreatmentPlan {
-  summary: string;
-  phases: TreatmentPhase[];
+export interface DiagnosisClassification {
+  classification_system: string;
+  specific_class: string;
+  definitive_diagnosis: string;
+  clinical_justification: string;
+  differential_reasoning: string;
+  pdf_references: string[];
+}
+
+export interface RehabilitationTechnique {
+  technique_name: string;
+  detailed_description: string;
+  why_selected: string;
+  why_not_alternatives: string;
+  pdf_references: string[];
+}
+
+export interface OcclusalConcept {
+  concept_name: string;
+  clinical_application: string;
+  pdf_references: string[];
+}
+
+export interface OcclusalScheme {
+  scheme_name: string;
+  justification: string;
+  pdf_references: string[];
+}
+
+export interface PhotoAnalysisFinding {
+  photo_label: string;
+  observations: string;
+  clinical_significance: string;
+}
+
+export interface MaterialChoice {
+  material: string;
+  where_used: string;
+  rationale: string;
+  pdf_references: string[];
 }
 
 export interface AlternativeOption {
@@ -86,16 +133,17 @@ export interface AlternativeOption {
   indications: string[];
   limitations: string[];
   when_to_choose: string;
+  pdf_references: string[];
 }
 
-export interface PdfMemoryRef {
+export interface PdfReference {
   source_title: string;
-  excerpt: string;
+  excerpt_or_page: string;
   relevance: string;
 }
 
-export interface LatestKnowledgeRef {
-  topic: string;
+export interface ExternalReference {
+  source: string;
   summary: string;
   why_it_matters: string;
 }
@@ -107,28 +155,26 @@ export interface ConflictOrUpdate {
 }
 
 export interface EvidenceBreakdown {
-  pdf_memory: PdfMemoryRef[];
-  latest_knowledge: LatestKnowledgeRef[];
+  pdf_references: PdfReference[];
+  external_references: ExternalReference[];
   conflicts_or_updates: ConflictOrUpdate[];
 }
 
 export interface TreatmentResponse {
   case_summary: string;
+  photo_analysis: PhotoAnalysisFinding[];
   need_more_information: string[];
   red_flags: string[];
-  working_assessment: string;
-  treatment_objectives: string[];
-  recommended_treatment_plan: RecommendedTreatmentPlan;
+  diagnosis: DiagnosisClassification;
+  rehabilitation_technique: RehabilitationTechnique;
+  occlusal_concept: OcclusalConcept;
+  occlusal_scheme: OcclusalScheme;
+  treatment_phases: TreatmentPhase[];
   alternative_options: AlternativeOption[];
-  required_investigations: string[];
+  material_choices: MaterialChoice[];
   prosthodontic_considerations: string[];
-  occlusion_considerations: string[];
-  indications: string[];
-  contraindications: string[];
-  choice_of_material: string[];
-  material_options: string[];
   maintenance_protocol: string[];
-  risks_and_contraindications: string[];
+  risks_and_complications: string[];
   patient_communication_points: string[];
   evidence_breakdown: EvidenceBreakdown;
   confidence_level: string;
