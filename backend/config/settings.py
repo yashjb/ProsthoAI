@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     openai_temperature: float = 0.2
     openai_timeout: int = 120
 
+    # Vision model timeout (longer for image processing)
+    vision_timeout: int = 180
+
     # Rate limiting
     max_requests_per_minute: int = 15
 
