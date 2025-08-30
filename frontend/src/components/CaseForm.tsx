@@ -200,7 +200,7 @@ export default function CaseForm({ onSubmit, loading }: Props) {
           key={section.title}
           className="bg-white dark:bg-slate-800/60 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-5"
         >
-          <h3 className="text-base font-semibold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700 pb-3">
+          <h3 className="text-base font-semibold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700 pb-3 mb-4">
             {section.title}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
