@@ -23,11 +23,14 @@ export default function App() {
     document.documentElement.classList.toggle('dark', dark);
   }, [dark]);
 
-  const handleSubmit = async (caseData: CaseInput, files: File[], photos: ClinicalPhotos) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (caseData: CaseInput, photos: ClinicalPhotos) => {
     setView('loading');
+    setSubmitting(true);
     setError(null);
     try {
-      const res = await analyzeCase(caseData, files, photos);
+      const res = await analyzeCase(caseData, photos);
       if (res.success && res.data) {
         setResult(res.data);
         setView('results');
@@ -38,6 +41,8 @@ export default function App() {
     } catch (err: any) {
       setError(err.message || 'Failed to reach the server.');
       setView('form');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -59,9 +64,9 @@ export default function App() {
               Treatment Planning
             </h2>
             <p className="mt-3 text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-              Upload your reference PDFs, enter the patient case details, and receive
-              an instant structured treatment plan grounded in evidence and enhanced
-              with current best knowledge.
+              Enter the patient case details, upload clinical photographs, and
+              receive an instant structured treatment plan grounded in evidence
+              from reference PDFs and enhanced with current best knowledge.
             </p>
           </div>
         )}
@@ -73,16 +78,17 @@ export default function App() {
           </div>
         )}
 
-        {view === 'form' && (
-          <CaseForm onSubmit={handleSubmit} loading={false} />
-        )}
+        {/* CaseForm stays mounted to preserve state; hidden when not active */}
+        <div style={{ display: view === 'form' ? 'block' : 'none' }}>
+          <CaseForm onSubmit={handleSubmit} loading={submitting} />
+        </div>
         {view === 'loading' && <LoadingState />}
         {view === 'results' && result && (
           <ResultsView data={result} onBack={handleBack} />
         )}
       </main>
 
-      <footer className="text-center py-6 text-xs text-slate-400 dark:text-slate-500">
+      <footer className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200 dark:border-slate-800">
         ProsthoAI — Clinical Decision-Support Tool • Not a substitute for professional judgment
       </footer>
     </div>
