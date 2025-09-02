@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     embedding_model: str = "text-embedding-3-small"
     vision_model: str = "gpt-5.4"
     embedding_dimensions: int = 1536
+    embedding_batch_size: int = 100
 
     # Logging
     log_level: str = "INFO"
