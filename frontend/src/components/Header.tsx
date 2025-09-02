@@ -17,7 +17,7 @@ export default function Header({ dark, onToggle }: Props) {
             <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
               ProsthoAI
             </h1>
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 -mt-0.5">
+            <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-medium -mt-0.5">
               Treatment Planning Assistant
             </p>
           </div>
