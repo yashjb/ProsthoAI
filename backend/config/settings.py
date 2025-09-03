@@ -65,6 +65,7 @@ class Settings(BaseSettings):
     # Security
     api_key_header: str = "X-API-Key"
     enable_api_key_auth: bool = False
+    max_request_size_mb: int = 100
 
     class Config:
         env_file = ".env"
