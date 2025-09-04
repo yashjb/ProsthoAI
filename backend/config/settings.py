@@ -48,6 +48,7 @@ class Settings(BaseSettings):
     max_pdf_size_mb: int = 20
     max_pdfs_per_request: int = 5
     allowed_pdf_extensions: list[str] = ["pdf"]
+    pdf_extraction_timeout: int = 30
 
     # Image processing
     max_image_dimension: int = 2048
