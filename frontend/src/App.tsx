@@ -59,7 +59,7 @@ export default function App() {
         {/* Hero — only on form view */}
         {view === 'form' && (
           <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
               AI-Powered Prosthodontic <br className="hidden sm:block" />
               Treatment Planning
             </h2>
