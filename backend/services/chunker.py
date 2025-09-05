@@ -15,6 +15,7 @@ _enc = tiktoken.encoding_for_model("gpt-4o")
 
 
 def _count_tokens(text: str) -> int:
+    """Count tokens in text using tiktoken."""
     return len(_enc.encode(text))
 
 
