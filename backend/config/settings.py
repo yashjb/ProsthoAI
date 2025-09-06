@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     openai_max_tokens: int = 32768
     openai_temperature: float = 0.2
     openai_timeout: int = 120
+    openai_retry_attempts: int = 3
 
     # Vision model timeout (longer for image processing)
     vision_timeout: int = 180
