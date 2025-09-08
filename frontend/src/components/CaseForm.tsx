@@ -240,7 +240,7 @@ export default function CaseForm({ onSubmit, loading }: Props) {
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-lg shadow-primary-500/25 disabled:opacity-60 disabled:cursor-not-allowed transition-all hover:shadow-xl hover:shadow-primary-500/30"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-lg shadow-primary-500/25 disabled:opacity-60 disabled:cursor-not-allowed transition-all hover:shadow-xl hover:shadow-primary-500/30 active:scale-95"
         >
           {loading ? (
             <>
