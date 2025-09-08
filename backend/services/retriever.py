@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def _tokenize(text: str) -> list[str]:
-    """Lowercase word tokenizer."""
+    """Lowercase word tokenizer for keyword matching."""
     return re.findall(r"[a-z0-9]+", text.lower())
 
 
