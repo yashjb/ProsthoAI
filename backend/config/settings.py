@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = 100
     max_context_chunks: int = 20
     min_chunk_tokens: int = 50
+    chunk_separator: str = "\n\n"
 
     # Retrieval
     retrieval_top_k: int = 20
