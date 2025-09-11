@@ -2,39 +2,50 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from models.schemas import CaseInput
 
-SYSTEM_PROMPT = """You are a highly experienced MDS Prosthodontist acting as a clinical decision-support assistant. You have deep expertise in:
-- Fixed prosthodontics (crowns, bridges, veneers, inlays/onlays)
-- Removable prosthodontics (complete dentures, removable partial dentures, overdentures)
-- Implant prosthodontics (implant-supported fixed and removable prostheses)
-- Occlusion and TMD management
-- Esthetic rehabilitation & smile design
-- Full mouth rehabilitation
-- Medically compromised dental patients
-- Interdisciplinary treatment planning
+SYSTEM_PROMPT = """\
+You are a senior MDS Prosthodontist with 25+ years of clinical and academic experience in full-mouth rehabilitation, fixed and removable prosthodontics, implant prosthodontics, occlusion, esthetic dentistry, and managing medically compromised patients.
 
-STRICT RULES YOU MUST FOLLOW:
-1. You are a DECISION-SUPPORT tool — NEVER present output as a final diagnosis or a replacement for a qualified prosthodontist/dentist.
-2. Clearly separate what comes from the uploaded PDF references, what comes from your latest training knowledge, and what is your synthesized inference.
-3. When clinical information is incomplete, explicitly list what is missing in "need_more_information".
-4. If there are RED FLAGS (urgent/serious risk situations such as suspected malignancy, airway compromise, uncontrolled systemic disease), list them prominently in "red_flags".
-5. NEVER fabricate citations, paper titles, DOIs, or author names. If you reference something, it must come from the provided PDF excerpts or be clearly marked as general professional knowledge.
-6. If the PDF content conflicts with newer evidence, you MUST explicitly describe the conflict in "evidence_breakdown.conflicts_or_updates".
-7. Express your overall confidence as "low", "medium", or "high" based on completeness of clinical data and strength of evidence.
-8. Always include a medical disclaimer.
-9. Respond ONLY with valid JSON matching the exact schema provided. No markdown fences, no commentary outside the JSON.
+You think and respond like a **clinician conducting a real case discussion**, NOT like a textbook. Every statement you make must be:
+- **Case-specific** — directly tied to THIS patient's findings
+- **Precisely reasoned** — explain WHY based on the clinical findings
+- **Evidence-backed** — reference the PDF excerpts provided, citing the source name after every key claim
+- **Actionable** — give concrete procedures, materials, sequences; avoid vague phrases like "as appropriate" or "may be considered"
 
-RESPONSE TONE:
-Professional, clinically precise, evidence-informed, and multidisciplinary-aware. Write as a senior consultant would when discussing a case with a colleague — concise but thorough.
+═══════════════════════════════════════════════════
+ABSOLUTE RULES (VIOLATIONS WILL MAKE OUTPUT USELESS)
+═══════════════════════════════════════════════════
+
+1. CASE-SPECIFIC ONLY — Do NOT list all possible classifications/techniques/options. Identify THE ONE that applies to this case and justify it against the clinical findings. Mention alternatives only to explain why they are NOT chosen here.
+
+2. REFERENCING IS MANDATORY — After every key clinical statement, include the PDF source name in parentheses, e.g., "(Source: Oral Rehabilitation for Compromised and Elderly Patients)". If a statement cannot be tied to a provided PDF excerpt, clearly mark it as "[External evidence-based knowledge]" and cite the journal/textbook.
+
+3. NEVER FABRICATE REFERENCES — Do not invent PDF page numbers, paper titles, DOIs, or authors. Only cite what is actually present in the provided excerpts.
+
+4. DEPTH OVER BREADTH — A single well-justified diagnosis is worth more than listing five possible ones. A single detailed step-by-step phase is worth more than a shallow overview of all phases.
+
+5. CLINICAL PROCEDURE DETAIL — For every treatment step: state exactly what is done, what instruments/materials are used, what sequence is followed, what precautions apply, and what errors to avoid. Write as if instructing a PG student performing the procedure.
+
+6. NO GENERIC THEORY — Do not explain background concepts unless directly needed to justify a decision for this case. If the patient has generalized attrition, do NOT explain what attrition is — instead classify it, quantify it, and plan for it.
+
+7. PHOTO ANALYSIS — If clinical photographs are provided, describe specific observations from each photograph. Do not say "photographs show attrition" — say "frontal view shows generalized loss of tooth structure in the anterior sextants with exposed dentin on the incisal edges of 11, 21, 31, 41; the maxillary arch photo reveals worn palatal concavities on 13–23 consistent with Category I/II Turner & Missirlian classification."
+
+8. DISAMBIGUATION — When the PDF excerpts contain multiple classification systems or approaches, you MUST pick the one that fits this case and explicitly state why the others do not fit.
+
+9. You are a DECISION-SUPPORT tool. Include a disclaimer that this does NOT replace professional clinical judgment.
+
+10. Respond ONLY with valid JSON matching the exact schema provided. No markdown fences, no commentary outside the JSON.
+
+RESPONSE TONE: Senior consultant discussing a case with a colleague — precise, authoritative, clinically grounded. Every sentence should carry clinical weight.
 """
 
 
 def _format_pdf_context(chunks: list[dict[str, str]]) -> str:
-    """Format retrieved PDF chunks into a single context block."""
     if not chunks:
         return "No PDF reference material was provided for this case."
-
     parts: list[str] = []
     for i, chunk in enumerate(chunks, 1):
         source = chunk.get("source", "Unknown source")
@@ -44,7 +55,6 @@ def _format_pdf_context(chunks: list[dict[str, str]]) -> str:
 
 
 def _format_case(case: CaseInput) -> str:
-    """Format case fields into a readable block, skipping empty fields."""
     fields = [
         ("Patient Age", case.patient_age),
         ("Patient Sex", case.patient_sex),
@@ -73,39 +83,125 @@ def _format_case(case: CaseInput) -> str:
 
 
 RESPONSE_SCHEMA_INSTRUCTION = """
-You MUST respond with a single JSON object using exactly this schema (no extra keys, no missing keys):
+═══════════════════════════════════════════════════
+RESPONSE JSON SCHEMA (respond with EXACTLY this structure)
+═══════════════════════════════════════════════════
+
 {
-  "case_summary": "<string>",
-  "need_more_information": ["<string>", ...],
-  "red_flags": ["<string>", ...],
-  "working_assessment": "<string>",
-  "treatment_objectives": ["<string>", ...],
-  "recommended_treatment_plan": {
-    "summary": "<string>",
-    "phases": [
-      {"phase_name": "<string>", "steps": ["<string>", ...], "rationale": "<string>"}
+  "case_summary": "<Concise but clinically rich summary. Correlate chief complaint, clinical findings, medical history, and photograph observations into a cohesive clinical picture. Do NOT just list the fields back.>",
+
+  "photo_analysis": [
+    {
+      "photo_label": "<e.g. Extraoral photograph with smile>",
+      "observations": "<Specific clinical observations — tooth-by-tooth where relevant, gingival conditions, occlusal relationships, arch form, attrition patterns, shade, smile line, lip competence, etc.>",
+      "clinical_significance": "<How these findings affect diagnosis and treatment planning for THIS case>"
+    }
+  ],
+
+  "need_more_information": ["<Specific missing data that would change or refine the plan, e.g. 'Periapical radiograph of 36 to assess remaining root structure'>"],
+
+  "red_flags": ["<Only genuine urgent concerns for THIS patient, e.g. 'History of nasopharyngeal carcinoma — must confirm radiation therapy status before any implant planning; risk of osteoradionecrosis'>"],
+
+  "diagnosis": {
+    "classification_system": "<e.g. Turner and Missirlian Classification of Worn Dentition>",
+    "specific_class": "<The EXACT class that applies — e.g. 'Category I: Excessive wear with loss of VDO' — no listing of all categories>",
+    "definitive_diagnosis": "<Full definitive diagnosis statement for this case>",
+    "clinical_justification": "<Tie the diagnosis to specific clinical findings: which teeth show what pattern, what the occlusion reveals, how the VDO is affected, what the radiographs show. Reference PDF excerpts.>",
+    "differential_reasoning": "<Why other categories/diagnoses were ruled out based on THIS patient's findings>",
+    "pdf_references": ["(Source: filename, relevant excerpt/concept)"]
+  },
+
+  "rehabilitation_technique": {
+    "technique_name": "<e.g. Hobo Twin-Stage Technique / Pankey-Mann-Schuyler / Dawson>",
+    "detailed_description": "<How this technique is applied step-by-step in THIS case — not a textbook definition>",
+    "why_selected": "<Case-specific justification>",
+    "why_not_alternatives": "<Why other techniques are NOT suitable for this specific case>",
+    "pdf_references": ["(Source: filename, relevant excerpt/concept)"]
+  },
+
+  "occlusal_concept": {
+    "concept_name": "<e.g. Conformative Approach / Reorganized Approach>",
+    "clinical_application": "<How this concept applies clinically to THIS case>",
+    "pdf_references": ["(Source: filename, relevant excerpt/concept)"]
+  },
+
+  "occlusal_scheme": {
+    "scheme_name": "<e.g. Mutually Protected Occlusion / Group Function / Canine-Guided>",
+    "justification": "<Case-specific reason for this scheme>",
+    "pdf_references": ["(Source: filename, relevant excerpt/concept)"]
+  },
+
+  "treatment_phases": [
+    {
+      "phase_name": "<e.g. Phase 1: Diagnostic Phase>",
+      "steps": [
+        {
+          "step_number": 1,
+          "what_is_done": "<Specific procedure>",
+          "why_it_is_done": "<Clinical reasoning for THIS case>",
+          "clinical_procedure_details": "<Detailed procedure — instruments, sequence, materials, settings — as if writing a PG clinical protocol>",
+          "investigations_and_materials": "<Specific materials/investigations needed for this step>",
+          "precautions": ["<Stage-specific practical precautions>"],
+          "common_errors_to_avoid": ["<Common errors that could compromise this step>"],
+          "pdf_references": ["(Source: filename, relevant concept)"]
+        }
+      ]
+    }
+  ],
+
+  "alternative_options": [
+    {
+      "option": "<Alternative treatment approach>",
+      "indications": ["<When this alternative would be chosen instead>"],
+      "limitations": ["<Why it is NOT the primary choice for THIS case>"],
+      "when_to_choose": "<Specific clinical scenario where this becomes first choice>",
+      "pdf_references": ["(Source: filename)"]
+    }
+  ],
+
+  "material_choices": [
+    {
+      "material": "<e.g. Lithium disilicate (IPS e.max Press)>",
+      "where_used": "<Which teeth/restorations — be specific>",
+      "rationale": "<Why this material for this location in this patient>",
+      "pdf_references": ["(Source: filename)"]
+    }
+  ],
+
+  "prosthodontic_considerations": ["<Case-specific considerations with PDF references where possible>"],
+
+  "maintenance_protocol": ["<Specific maintenance items for THIS case with timeframes>"],
+
+  "risks_and_complications": ["<Case-specific risks>"],
+
+  "patient_communication_points": ["<What to explain to THIS patient specifically>"],
+
+  "evidence_breakdown": {
+    "pdf_references": [
+      {
+        "source_title": "<PDF filename>",
+        "excerpt_or_page": "<Relevant excerpt or concept used from this source>",
+        "relevance": "<How it informed the treatment plan>"
+      }
+    ],
+    "external_references": [
+      {
+        "source": "<Journal/textbook name and year — only if PDF evidence was insufficient>",
+        "summary": "<What this source contributes>",
+        "why_it_matters": "<Why external evidence was needed here>"
+      }
+    ],
+    "conflicts_or_updates": [
+      {
+        "older_pdf_position": "<What the PDF states>",
+        "newer_understanding": "<Current evidence-based position>",
+        "clinical_impact": "<How this affects treatment for THIS patient>"
+      }
     ]
   },
-  "alternative_options": [
-    {"option": "<string>", "indications": ["<string>"], "limitations": ["<string>"], "when_to_choose": "<string>"}
-  ],
-  "required_investigations": ["<string>", ...],
-  "prosthodontic_considerations": ["<string>", ...],
-  "occlusion_considerations": ["<string>", ...],
-  "indications": ["<string — clinical indications for the recommended treatment>", ...],
-  "contraindications": ["<string — absolute and relative contraindications>", ...],
-  "choice_of_material": ["<string — recommended materials with rationale for each>", ...],
-  "material_options": ["<string>", ...],
-  "maintenance_protocol": ["<string>", ...],
-  "risks_and_contraindications": ["<string>", ...],
-  "patient_communication_points": ["<string>", ...],
-  "evidence_breakdown": {
-    "pdf_memory": [{"source_title": "<string>", "excerpt": "<string>", "relevance": "<string>"}],
-    "latest_knowledge": [{"topic": "<string>", "summary": "<string>", "why_it_matters": "<string>"}],
-    "conflicts_or_updates": [{"older_pdf_position": "<string>", "newer_understanding": "<string>", "clinical_impact": "<string>"}]
-  },
+
   "confidence_level": "low | medium | high",
-  "disclaimer": "<string — must state this is not a diagnosis and does not replace professional clinical judgment>"
+  "disclaimer": "<Must state this is AI-generated decision support and does NOT replace professional clinical judgment.>"
 }
 """
 
@@ -113,27 +209,113 @@ You MUST respond with a single JSON object using exactly this schema (no extra k
 def build_messages(
     case: CaseInput,
     relevant_chunks: list[dict[str, str]],
-) -> list[dict[str, str]]:
+    *,
+    image_parts: list[dict[str, Any]] | None = None,
+    image_findings: str = "",
+) -> list[dict[str, Any]]:
     """Return the messages list for the OpenAI chat completion call."""
     pdf_context = _format_pdf_context(relevant_chunks)
     case_text = _format_case(case)
 
-    user_content = f"""## Uploaded PDF Reference Material
+    findings_section = ""
+    if image_findings:
+        findings_section = (
+            f"\n\n## Automated Clinical Photograph Analysis\n"
+            f"(Pre-extracted by vision model — verify and refine using the raw images below)\n\n"
+            f"{image_findings}\n"
+        )
+
+    photo_instruction = ""
+    if image_parts:
+        photo_instruction = (
+            "\n\n### PHOTOGRAPH ANALYSIS INSTRUCTIONS\n"
+            "Clinical photographs are attached below. For EACH photograph:\n"
+            "- Describe specific observations tooth-by-tooth where visible\n"
+            "- Note gingival conditions, occlusal relationships, arch form\n"
+            "- Identify attrition patterns, existing restorations, shade issues\n"
+            "- Correlate visual findings with the reported case data\n"
+            "- If the automated analysis above missed anything, ADD it\n"
+            "- Populate the photo_analysis array in the JSON response"
+        )
+
+    text_content = f"""═══════════════════════════════════════════════════
+PDF REFERENCE MATERIAL (PRIMARY KNOWLEDGE BASE)
+═══════════════════════════════════════════════════
 {pdf_context}
 
-## Patient Case Details
-{case_text}
+═══════════════════════════════════════════════════
+PATIENT CASE DATA
+═══════════════════════════════════════════════════
+{case_text}{findings_section}
 
-## Instructions
-1. Use the PDF reference material above as your PRIMARY knowledge base for this case.
-2. ALSO incorporate your latest clinical knowledge and evidence-based prosthodontic guidelines to enhance the response.
-3. If the PDF content is outdated or conflicts with newer evidence, state the conflict explicitly.
-4. Identify any missing information that would improve the treatment plan.
-5. Flag any red-flag situations.
-6. Provide a structured, phased treatment plan with alternatives.
+═══════════════════════════════════════════════════
+YOUR TASK — CASE-SPECIFIC CLINICAL ANALYSIS
+═══════════════════════════════════════════════════
+
+Using the PDF excerpts above as your PRIMARY and CORE reference, prepare a **case-specific, precise, and in-depth response** covering:
+
+### 1. Diagnosis (with Classification)
+- Identify the EXACT classification applicable to THIS case (e.g., Turner & Missirlian for worn dentition)
+- Provide a DEFINITIVE diagnosis — not a broad listing of all possible classes
+- Justify using SPECIFIC clinical findings from the case data AND PDF excerpts
+- Include differential reasoning only to explain why other classes were ruled out
+
+### 2. Full Mouth Rehabilitation Technique
+- Name the SPECIFIC technique indicated for THIS case
+- Justify WHY this technique over alternatives — tied to this patient's clinical situation
+- Case-driven explanation, not theoretical
+
+### 3. Occlusal Concept
+- State the EXACT occlusal concept (conformative vs reorganized)
+- Explain its clinical application in THIS patient
+
+### 4. Occlusal Scheme
+- State the SPECIFIC scheme (canine-guided, group function, mutually protected, etc.)
+- Justify based on THIS case's clinical findings
+
+### 5. Step-by-Step Treatment Plan
+Provide a COMPLETE sequential treatment plan with these phases:
+- Diagnostic phase
+- Pretreatment/preparatory phase
+- Provisional/transitional phase
+- Definitive phase
+- Follow-up/maintenance phase
+
+For EACH step within each phase, you MUST include:
+- What is done (specific procedure)
+- Why it is done (clinical reasoning for THIS case)
+- Clinical procedure details (instruments, materials, sequence)
+- Investigations/materials required
+- PRECAUTIONS specific to that step
+- COMMON ERRORS/COMPLICATIONS to avoid at that step
+- PDF source references
+
+### 6. Stage-wise Precautions
+- Embed precautions WITHIN each treatment step (not as a separate generic list)
+- Make precautions practical and specific to THIS patient's conditions
+
+### 7. Referencing (MANDATORY)
+- Cite PDF source name after EVERY key statement
+- If a claim doesn't come from the provided PDFs, mark it clearly as [External evidence-based knowledge] with source
+- Do NOT include unsupported statements
+
+### 8. External Sources
+- Use ONLY if PDF evidence is insufficient for a specific point
+- Must be from recent, reputed journals/textbooks
+- Clearly distinguish [PDF-based] vs [External evidence-based]{photo_instruction}
 
 {RESPONSE_SCHEMA_INSTRUCTION}
 """
+
+    if image_parts:
+        user_content: list[dict[str, Any]] = [{"type": "text", "text": text_content}]
+        for img in image_parts:
+            user_content.append(
+                {"type": "text", "text": f"\n📸 Clinical Photo — {img['label']}:"}
+            )
+            user_content.append(img["content"])
+    else:
+        user_content = text_content  # type: ignore[assignment]
 
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
