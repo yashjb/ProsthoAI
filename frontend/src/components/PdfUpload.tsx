@@ -61,7 +61,7 @@ export default function PdfUpload({ files, onChange }: Props) {
           </span>{' '}
           or drag and drop PDF files
         </p>
-        <p className="text-xs text-slate-400 mt-1">PDF only • Up to 20 MB each</p>
+        <p className="text-xs text-slate-400 mt-1">PDF only • Up to 500 MB each</p>
         <input
           ref={inputRef}
           type="file"
