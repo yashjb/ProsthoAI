@@ -3,6 +3,18 @@ import { Camera, X, FileImage } from 'lucide-react';
 import type { ClinicalPhotos } from '../types';
 import { clinicalPhotoFields } from '../types';
 
+/** RAW formats browsers cannot natively decode — show icon fallback instead of broken <img> */
+const RAW_EXTENSIONS = new Set(['.dng', '.cr2', '.cr3', '.nef', '.arw', '.orf', '.raf', '.rw2']);
+
+function isRawFile(file: File): boolean {
+  const ext = '.' + file.name.split('.').pop()?.toLowerCase();
+  return RAW_EXTENSIONS.has(ext);
+}
+
+function getFileExtension(file: File): string {
+  return (file.name.split('.').pop() ?? '').toUpperCase();
+}
+
 interface Props {
   photos: ClinicalPhotos;
   onChange: (photos: ClinicalPhotos) => void;
@@ -30,7 +42,8 @@ export default function ClinicalPhotosUpload({ photos, onChange }: Props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {clinicalPhotoFields.map((field) => {
           const file = photos[field.key];
-          const previewUrl = file && file.type.startsWith('image/')
+          const raw = file ? isRawFile(file) : false;
+          const previewUrl = file && !raw && file.type.startsWith('image/')
             ? URL.createObjectURL(file)
             : null;
 
@@ -49,8 +62,13 @@ export default function ClinicalPhotosUpload({ photos, onChange }: Props) {
                       onLoad={() => URL.revokeObjectURL(previewUrl)}
                     />
                   ) : (
-                    <div className="w-14 h-14 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                    <div className="w-14 h-14 rounded-lg bg-slate-200 dark:bg-slate-700 flex flex-col items-center justify-center shrink-0 gap-0.5">
                       <FileImage className="w-6 h-6 text-slate-400" />
+                      {raw && (
+                        <span className="text-[9px] font-bold text-slate-400 leading-none tracking-wide">
+                          {getFileExtension(file)}
+                        </span>
+                      )}
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
