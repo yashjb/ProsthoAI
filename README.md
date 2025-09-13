@@ -303,4 +303,8 @@ curl -X POST http://localhost:8000/api/analyze \
 
 ## License
 
-MIT
+MIT License - See LICENSE file for details
+
+---
+
+**Developed with ❤️ for prosthodontists worldwide**
