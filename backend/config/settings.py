@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     vision_model: str = "gpt-5.4"
     embedding_dimensions: int = 1536
     embedding_batch_size: int = 100
+    
+    # Vision analysis settings
+    vision_temperature: float = 0.1
 
     # Logging
     log_level: str = "INFO"
