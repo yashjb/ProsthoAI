@@ -55,7 +55,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col">
       <Header dark={dark} onToggle={() => setDark(!dark)} />
 
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 pb-12">
         {/* Hero — only on form view */}
         {view === 'form' && (
           <div className="text-center mb-10">
