@@ -10,7 +10,7 @@ export default function LoadingState() {
   return (
     <div className="flex flex-col items-center justify-center py-20 space-y-8">
       <div className="relative">
-        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-xl shadow-primary-500/30">
+        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-2xl shadow-primary-500/40">
           <Loader2 className="w-8 h-8 text-white animate-spin" />
         </div>
         <div className="absolute -inset-3 rounded-full border-2 border-primary-200 dark:border-primary-800 animate-ping opacity-30" />
