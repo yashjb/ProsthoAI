@@ -22,6 +22,7 @@ class Settings(BaseSettings):
 
     # Rate limiting
     max_requests_per_minute: int = 15
+    rate_limit_enabled: bool = True
 
     # Embedding & vision models
     embedding_model: str = "text-embedding-3-small"
