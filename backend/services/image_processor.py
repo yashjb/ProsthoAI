@@ -15,7 +15,7 @@ from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
-RAW_EXTENSIONS = {".dng", ".cr2", ".cr3", ".nef", ".arw", ".orf", ".raf", ".rw2"}
+RAW_EXTENSIONS = {".dng", ".cr2", ".cr3", ".nef", ".arw", ".orf", ".raf", ".rw2", ".heic"}
 
 
 def _is_raw_format(filename: str) -> bool:
