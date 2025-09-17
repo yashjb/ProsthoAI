@@ -11,6 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from config.settings import settings
 from api.routes import router
 
+logger = logging.getLogger(__name__)
+__version__ = "0.1.0"
+
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
     format="%(asctime)s  %(levelname)-8s  %(name)s  %(message)s",
