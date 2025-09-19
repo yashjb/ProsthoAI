@@ -12,6 +12,8 @@ from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
+_REASONING_MODELS = frozenset({"o1", "o1-mini", "o3", "o4-mini"})
+
 _client: OpenAI | None = None
 
 
