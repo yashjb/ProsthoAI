@@ -12,8 +12,6 @@ from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
-_REASONING_MODELS = frozenset({"o1", "o1-mini", "o3", "o4-mini"})
-
 _client: OpenAI | None = None
 
 
@@ -45,8 +43,7 @@ def call_openai(messages: list[dict[str, Any]]) -> str:
         "response_format": {"type": "json_object"},
     }
 
-    _is_reasoning = settings.openai_model in _REASONING_MODELS or settings.openai_model.startswith("o")
-    if settings.openai_model.startswith("gpt-5") or _is_reasoning:
+    if settings.openai_model.startswith("gpt-5") or settings.openai_model.startswith("o"):
         kwargs["max_completion_tokens"] = settings.openai_max_tokens
     else:
         kwargs["max_tokens"] = settings.openai_max_tokens
@@ -64,7 +61,7 @@ def call_openai(messages: list[dict[str, Any]]) -> str:
     )
     if not content:
         raise ValueError(
-            f"Empty response from model {settings.openai_model!r} (finish_reason={finish_reason}). "
+            f"Empty response from OpenAI (finish_reason={finish_reason}). "
             f"The model may have exhausted max_completion_tokens ({kwargs.get('max_completion_tokens', kwargs.get('max_tokens'))}) on reasoning."
         )
     return content
@@ -81,8 +78,8 @@ _VISION_SYSTEM = (
     "3. Note gingival conditions: recession, inflammation, bleeding, biotype\n"
     "4. Assess occlusal relationships if visible\n"
     "5. Note arch form, spacing, crowding\n"
-    "6. Describe prosthetic work: implants, crowns, bridges, partial/complete dentures\n"
-    "7. Flag abnormalities, red flags, and findings requiring urgent specialist referral\n\n"
+    "6. Describe any prosthetic work visible\n"
+    "7. Flag any abnormalities or red flags\n\n"
     "Be precise and clinical. Use FDI tooth notation where possible. "
     "This is NOT a diagnosis — these are observational findings to support "
     "a prosthodontist's assessment."

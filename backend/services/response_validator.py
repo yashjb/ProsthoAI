@@ -34,20 +34,12 @@ def validate_response(raw_json: str) -> TreatmentResponse:
         logger.error("OpenAI returned non-object JSON")
         return _fallback_response("Response was not a JSON object.")
 
-    # Ensure case_summary is substantive
-    if not data.get("case_summary") or len(str(data.get("case_summary", ""))) < 30:
-        data["case_summary"] = (
-            "Insufficient information for a complete summary. Review inputs and re-submit."
-        )
-
     # Ensure disclaimer exists
     if not data.get("disclaimer"):
         data["disclaimer"] = _DEFAULT_DISCLAIMER
 
     try:
-        result = TreatmentResponse.model_validate(data)
-        logger.info("Validated - confidence=%s, fields=%d", result.confidence_level, len(data))
-        return result
+        return TreatmentResponse.model_validate(data)
     except Exception as exc:
         logger.error("Validation failed: %s", exc)
         return _fallback_response(str(exc))
@@ -56,11 +48,8 @@ def validate_response(raw_json: str) -> TreatmentResponse:
 def _fallback_response(error_detail: str) -> TreatmentResponse:
     """Return a safe fallback response when parsing/validation fails."""
     return TreatmentResponse(
-        case_summary="The AI was unable to produce a fully structured response. Please check inputs and retry.",
-        need_more_information=[
-            "Please re-submit the case.",
-            "If the issue persists, simplify the clinical notes or reduce the number of images.",
-        ],
+        case_summary="The AI was unable to produce a fully structured response for this case.",
+        need_more_information=["Please re-submit the case. If the issue persists, simplify the input."],
         red_flags=[],
         confidence_level="low",
         disclaimer=_DEFAULT_DISCLAIMER,
