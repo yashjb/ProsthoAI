@@ -26,3 +26,10 @@ body {
 ::-webkit-scrollbar-thumb {
   @apply bg-slate-300 dark:bg-slate-600 rounded-full;
 }
+
+
+/* Typography */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
