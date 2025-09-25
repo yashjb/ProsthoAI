@@ -308,3 +308,11 @@ MIT License - See LICENSE file for details
 ---
 
 **Developed with ❤️ for prosthodontists worldwide**
+
+
+## Troubleshooting
+
+- **429 rate limit**: Reduce `embedding_batch_size` in `.env`.
+- **Empty AI response**: Increase `OPENAI_MAX_TOKENS` for reasoning models.
+- **Corrupt PDF**: Re-export from source; `PyPDF2` cannot decode encrypted files.
+- **RAW image fails**: Install `rawpy` and `numpy` for DNG/CR2/NEF support.
