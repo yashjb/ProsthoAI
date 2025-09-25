@@ -39,8 +39,8 @@ class CaseInput(BaseModel):
         if v and v.strip():
             try:
                 age = int(v)
-                if age < 0 or age > 150:
-                    raise ValueError("Age must be between 0 and 150")
+                if age < 0 or age > 120:
+                    raise ValueError("Age must be between 0 and 120")
             except ValueError:
                 pass  # Allow non-numeric entries for flexibility
         return v
