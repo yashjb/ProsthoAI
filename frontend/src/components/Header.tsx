@@ -25,7 +25,7 @@ export default function Header({ dark, onToggle }: Props) {
         <button
           onClick={onToggle}
           aria-label="Toggle dark mode"
-          className="p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          className="cursor-pointer p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
           {dark ? (
             <Sun className="w-5 h-5 text-yellow-400" />
