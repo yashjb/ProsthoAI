@@ -49,7 +49,7 @@ async def analyze_case(
     Pipeline:
     1. Parse case data
     2. Process clinical photographs → vision analysis → structured findings
-    3. Semantic retrieval from parquet embedding store
+    3. Semantic retrieval from SQLite embedding store
     4. Build prompt with PDF context + image findings + case data
     5. Final LLM call for full treatment plan
     """
