@@ -15,7 +15,7 @@ export default function Header({ dark, onToggle }: Props) {
           </div>
           <div>
             <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
-              ProsthoAI
+              Prosthetic Intelligence
             </h1>
             <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-medium -mt-0.5">
               Treatment Planning Assistant
@@ -25,7 +25,7 @@ export default function Header({ dark, onToggle }: Props) {
         <button
           onClick={onToggle}
           aria-label="Toggle dark mode"
-          className="p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          className="cursor-pointer p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
           {dark ? (
             <Sun className="w-5 h-5 text-yellow-400" />
