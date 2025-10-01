@@ -12,7 +12,7 @@ class CaseInput(BaseModel):
 
     patient_age: str = ""
     patient_sex: str = ""
-    chief_complaint: str = ""
+    chief_complaint: str = Field(default="", description="Primary reason for visit")
     medical_history: str = ""
     dental_history: str = ""
     extraoral_findings: str = ""
