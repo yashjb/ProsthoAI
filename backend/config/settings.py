@@ -62,7 +62,7 @@ class Settings(BaseSettings):
 
     # Image processing
     max_image_dimension: int = 2048
-    image_quality: int = 85
+    image_quality: int = 82
     supported_image_formats: list[str] = ["jpg", "jpeg", "png", "webp"]
     max_images_per_request: int = 10
 
