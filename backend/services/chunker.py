@@ -98,6 +98,5 @@ def chunk_text(
     if current_paras:
         chunks.append({"text": "\n\n".join(current_paras), "source": source})
 
-    logger.debug("Chunk overlap_tokens=%d", overlap_tokens)
     logger.info("Chunked '%s' into %d chunks (max_tokens=%d)", source, len(chunks), max_tokens)
     return chunks
