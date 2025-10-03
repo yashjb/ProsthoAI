@@ -39,7 +39,9 @@ def validate_response(raw_json: str) -> TreatmentResponse:
         data["disclaimer"] = _DEFAULT_DISCLAIMER
 
     try:
-        return TreatmentResponse.model_validate(data)
+        result = TreatmentResponse.model_validate(data)
+        logger.info("Validated - confidence=%s", result.confidence_level)
+        return result
     except Exception as exc:
         logger.error("Validation failed: %s", exc)
         return _fallback_response(str(exc))
