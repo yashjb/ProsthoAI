@@ -18,7 +18,7 @@ _STOP_WORDS = frozenset({
 
 def _tokenize(text: str) -> list[str]:
     """Lowercase word tokenizer for keyword matching."""
-    return [w for w in re.findall(r"[a-z0-9]+", text.lower()) if w not in _STOP_WORDS]
+    return re.findall(r"[a-z0-9]+", text.lower())
 
 
 def _score_chunk(chunk_tokens: list[str], query_tokens_counter: Counter) -> float:
@@ -60,18 +60,6 @@ def retrieve_relevant_chunks(
         score = _score_chunk(tokens, query_counter)
         scored.append((score, chunk))
 
-    _n_pos = sum(1 for s, _ in scored if s > 0)
-    logger.debug("Pre-sort: %d non-zero / %d total scored chunks", _n_pos, len(scored))
-    # Deduplicate near-identical chunks to avoid repetitive context
-    seen_keys: set[str] = set()
-    deduped: list[tuple[float, dict[str, str]]] = []
-    for s, c in scored:
-        key = c["text"][:100]
-        if key not in seen_keys:
-            seen_keys.add(key)
-            deduped.append((s, c))
-    scored = deduped
-    logger.debug("After dedup: %d unique chunks", len(scored))
     scored.sort(key=lambda x: x[0], reverse=True)
 
     # Filter out zero-score chunks if we have enough non-zero ones
