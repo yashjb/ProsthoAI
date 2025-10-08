@@ -5,6 +5,7 @@ import os
 from pydantic_settings import BaseSettings
 
 _PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_BACKEND_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class Settings(BaseSettings):
@@ -38,7 +39,10 @@ class Settings(BaseSettings):
     log_format: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
     # PDF knowledge-base folder (pre-loaded at startup)
-    dental_pdf_folder: str = os.path.join(_PROJECT_ROOT, "dental pdf")
+    dental_pdf_folder: str = os.path.join(_BACKEND_ROOT, "dental_pdf")
+
+    # Parquet files folder (pre-computed embeddings)
+    parquet_folder: str = os.path.join(_BACKEND_ROOT, "parquet_files")
 
     # Chunking
     max_chunk_tokens: int = 600
@@ -58,11 +62,11 @@ class Settings(BaseSettings):
 
     # Image processing
     max_image_dimension: int = 2048
-    image_quality: int = 85
+    image_quality: int = 82
     supported_image_formats: list[str] = ["jpg", "jpeg", "png", "webp"]
     max_images_per_request: int = 10
 
-    cors_origins: list[str] = ["http://localhost:5173", "http://localhost:3000"]
+    cors_origins: list[str] = ["*"]
 
     # CORS configuration
     cors_allow_credentials: bool = True

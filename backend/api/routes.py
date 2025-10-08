@@ -49,7 +49,7 @@ async def analyze_case(
     Pipeline:
     1. Parse case data
     2. Process clinical photographs → vision analysis → structured findings
-    3. Semantic retrieval from SQLite embedding store
+    3. Semantic retrieval from parquet embedding store
     4. Build prompt with PDF context + image findings + case data
     5. Final LLM call for full treatment plan
     """
@@ -125,7 +125,7 @@ async def analyze_case(
     # Images were already analysed by the vision model; pass only the text
     # findings to the main call to avoid re-sending large base64 payloads.
     # Truncate vision findings to keep the total prompt manageable.
-    truncated_findings = image_findings[:6000] if image_findings else ""
+    truncated_findings = image_findings[:8000] if image_findings else ""
     messages = build_messages(
         case,
         relevant,
