@@ -38,3 +38,6 @@ backend/testkey.py
 
 # Local environment overrides
 .env.local
+
+# VS Code workspace settings
+.vscode/
