@@ -119,6 +119,7 @@ async def analyze_case(
     )
     query = " ".join(query_parts)
 
+    logger.debug("Retrieval query length: %d chars", len(query))
     relevant = retrieve_chunks(query) if query.strip() else []
     logger.info("Retrieved %d relevant PDF chunks", len(relevant))
 
