@@ -73,7 +73,7 @@ export default function App() {
 
         {/* Error toast */}
         {error && (
-          <div role="alert" aria-live="assertive" className="mb-6 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 text-sm text-red-700 dark:text-red-300 shadow-sm">
+          <div role="alert" aria-live="assertive" className="mb-6 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 text-sm text-red-700 dark:text-red-300 shadow-sm transition-opacity duration-300">
             <strong>Error:</strong> {error}
           </div>
         )}
