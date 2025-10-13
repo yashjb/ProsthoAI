@@ -36,7 +36,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="ProsthoAI — Treatment Planning Assistant",
     version="1.0.0",
-    description="AI-powered prosthodontic clinical decision-support tool.",
+    description="AI-powered prosthodontic clinical decision-support tool - semantic PDF retrieval and multimodal vision analysis.",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     lifespan=lifespan,
