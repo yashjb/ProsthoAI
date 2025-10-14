@@ -1,4 +1,7 @@
-"""Build the system and user prompts for the OpenAI API call."""
+"""Build the system and user prompts for the OpenAI API call.
+
+Supports text-only and multimodal (vision) message construction.
+"""
 
 from __future__ import annotations
 

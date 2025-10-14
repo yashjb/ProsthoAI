@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/types.ts","./src/vite-env.d.ts","./src/components/accordion.tsx","./src/components/caseform.tsx","./src/components/clinicalphotosupload.tsx","./src/components/header.tsx","./src/components/loadingstate.tsx","./src/components/pdfupload.tsx","./src/components/resultsview.tsx"],"version":"5.6.3"}

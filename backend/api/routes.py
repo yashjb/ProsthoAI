@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
+# -- Photo field configuration ----------------------------------------
 # Mapping: form-field name → human-readable label shown to the AI
 _PHOTO_FIELDS: list[tuple[str, str]] = [
     ("photo_extraoral_smile", "Extraoral photograph with smile"),
@@ -49,7 +50,7 @@ async def analyze_case(
     Pipeline:
     1. Parse case data
     2. Process clinical photographs → vision analysis → structured findings
-    3. Semantic retrieval from SQLite embedding store
+    3. Semantic retrieval from parquet embedding store
     4. Build prompt with PDF context + image findings + case data
     5. Final LLM call for full treatment plan
     """
@@ -116,8 +117,9 @@ async def analyze_case(
             ],
         )
     )
-    query = " ".join(query_parts)
+    query = " ".join(p.strip() for p in query_parts)
 
+    logger.debug("Retrieval query length: %d chars", len(query))
     relevant = retrieve_chunks(query) if query.strip() else []
     logger.info("Retrieved %d relevant PDF chunks", len(relevant))
 
@@ -125,7 +127,7 @@ async def analyze_case(
     # Images were already analysed by the vision model; pass only the text
     # findings to the main call to avoid re-sending large base64 payloads.
     # Truncate vision findings to keep the total prompt manageable.
-    truncated_findings = image_findings[:6000] if image_findings else ""
+    truncated_findings = image_findings[:8000] if image_findings else ""
     messages = build_messages(
         case,
         relevant,
