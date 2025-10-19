@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 _STOP_WORDS = frozenset({
     "the", "a", "an", "in", "on", "of", "and", "or", "is", "are",
     "to", "for", "with", "this", "that", "it", "at", "by", "as",
+    "from", "was", "were", "be", "been", "has", "have", "had",
 })
 
 
