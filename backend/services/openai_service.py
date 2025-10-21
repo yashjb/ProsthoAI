@@ -63,7 +63,7 @@ def call_openai(messages: list[dict[str, Any]]) -> str:
     )
     if not content:
         raise ValueError(
-            f"Empty response from OpenAI (finish_reason={finish_reason}). "
+            f"Empty response from model {settings.openai_model!r} (finish_reason={finish_reason}). "
             f"The model may have exhausted max_completion_tokens ({kwargs.get('max_completion_tokens', kwargs.get('max_tokens'))}) on reasoning."
         )
     return content
