@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# -- Photo field configuration ----------------------------------------
+# -- Photo field configuration (field_name, human_label) --------------
 # Mapping: form-field name → human-readable label shown to the AI
 _PHOTO_FIELDS: list[tuple[str, str]] = [
     ("photo_extraoral_smile", "Extraoral photograph with smile"),
