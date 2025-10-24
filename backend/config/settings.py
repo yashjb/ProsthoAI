@@ -46,7 +46,7 @@ class Settings(BaseSettings):
 
     # Chunking
     max_chunk_tokens: int = 600
-    chunk_overlap_tokens: int = 100
+    chunk_overlap_tokens: int = 120
     max_context_chunks: int = 25
     min_chunk_tokens: int = 50
     chunk_separator: str = "\n\n"
