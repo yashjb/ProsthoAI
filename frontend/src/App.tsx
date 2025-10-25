@@ -6,6 +6,7 @@ import LoadingState from './components/LoadingState';
 import { analyzeCase } from './api';
 import type { CaseInput, ClinicalPhotos, TreatmentResponse } from './types';
 
+/** Possible view states for the main application flow. */
 type View = 'form' | 'loading' | 'results';
 
 export default function App() {
