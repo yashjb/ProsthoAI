@@ -87,6 +87,9 @@ async def analyze_case(
         except Exception as exc:
             logger.warning("  Image skip: %s — %s", upload.filename, exc)
 
+    if not image_parts:
+        logger.debug("No clinical photographs uploaded for this case")
+
     # ── 3. Vision analysis — extract findings from photos ────────────────
     image_findings: str = ""
     if image_parts:
