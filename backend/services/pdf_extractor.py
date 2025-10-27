@@ -27,7 +27,6 @@ def extract_text_from_pdf(file_bytes: bytes, filename: str = "unknown.pdf") -> s
                 logger.warning("Could not extract page %d from %s", idx + 1, filename)
         full_text = "\n\n".join(pages)
         logger.info("Extracted %d pages from %s", len(pages), filename)
-        logger.debug("Total text length: %d chars", len(full_text))
         if not full_text.strip():
             logger.warning("No text could be extracted from %s", filename)
         return full_text
