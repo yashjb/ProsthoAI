@@ -23,7 +23,7 @@ def _get_client() -> OpenAI:
         _client = OpenAI(
             api_key=settings.openai_api_key,
             timeout=600.0,   # 10-minute hard timeout for reasoning models
-            max_retries=0,   # fail fast — no silent retries that multiply latency
+            max_retries=0,   # fail fast; caller should handle retries with backoff — no silent retries that multiply latency
         )
     return _client
 
@@ -45,7 +45,8 @@ def call_openai(messages: list[dict[str, Any]]) -> str:
         "response_format": {"type": "json_object"},
     }
 
-    if settings.openai_model.startswith("gpt-5") or settings.openai_model.startswith("o"):
+    _is_reasoning = settings.openai_model in _REASONING_MODELS or settings.openai_model.startswith("o")
+    if settings.openai_model.startswith("gpt-5") or _is_reasoning:
         kwargs["max_completion_tokens"] = settings.openai_max_tokens
     else:
         kwargs["max_tokens"] = settings.openai_max_tokens
@@ -81,7 +82,7 @@ _VISION_SYSTEM = (
     "4. Assess occlusal relationships if visible\n"
     "5. Note arch form, spacing, crowding\n"
     "6. Describe prosthetic work: implants, crowns, bridges, partial/complete dentures\n"
-    "7. Flag any abnormalities or red flags\n\n"
+    "7. Flag abnormalities, red flags, and findings requiring urgent specialist referral\n\n"
     "Be precise and clinical. Use FDI tooth notation where possible. "
     "This is NOT a diagnosis — these are observational findings to support "
     "a prosthodontist's assessment."
