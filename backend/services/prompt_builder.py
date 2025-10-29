@@ -85,6 +85,7 @@ def _format_case(case: CaseInput) -> str:
     return "\n".join(lines) if lines else "No structured case details provided."
 
 
+# -- JSON response schema sent as part of the user prompt ----------------
 RESPONSE_SCHEMA_INSTRUCTION = """
 ═══════════════════════════════════════════════════
 RESPONSE JSON SCHEMA (respond with EXACTLY this structure)
