@@ -41,3 +41,6 @@ backend/testkey.py
 
 # VS Code workspace settings
 .vscode/
+
+# macOS
+.DS_Store
