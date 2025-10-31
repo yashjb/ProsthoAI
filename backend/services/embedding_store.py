@@ -289,7 +289,7 @@ def retrieve(
     query_emb = np.array(_get_embedding(query), dtype=np.float32)
     embeddings = cache["embeddings"]
 
-    # Vectorized cosine similarity
+    # Vectorized cosine similarity -- full-scan; fast enough for <10k chunks
     norms = np.linalg.norm(embeddings, axis=1) * np.linalg.norm(query_emb)
     norms[norms == 0] = 1.0
     scores = embeddings @ query_emb / norms
