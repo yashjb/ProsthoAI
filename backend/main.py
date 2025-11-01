@@ -57,7 +57,7 @@ app.include_router(router, prefix="/api")
 
 
 @app.get("/health")
-async def health() -> dict:
+async def health():
     """Health check endpoint with basic system info."""
     import sys
     return {

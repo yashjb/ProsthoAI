@@ -35,12 +35,3 @@ dental_knowledge.db
 
 # Sensitive local scripts
 backend/testkey.py
-
-# Local environment overrides
-.env.local
-
-# VS Code workspace settings
-.vscode/
-
-# macOS
-.DS_Store

@@ -23,7 +23,7 @@ def _get_client() -> OpenAI:
         _client = OpenAI(
             api_key=settings.openai_api_key,
             timeout=600.0,   # 10-minute hard timeout for reasoning models
-            max_retries=0,   # fail fast; caller should handle retries with backoff — no silent retries that multiply latency
+            max_retries=0,   # fail fast — no silent retries that multiply latency
         )
     return _client
 

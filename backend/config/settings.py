@@ -46,8 +46,8 @@ class Settings(BaseSettings):
 
     # Chunking
     max_chunk_tokens: int = 600
-    chunk_overlap_tokens: int = 120
-    max_context_chunks: int = 25
+    chunk_overlap_tokens: int = 100
+    max_context_chunks: int = 20
     min_chunk_tokens: int = 50
     chunk_separator: str = "\n\n"
 
@@ -62,7 +62,7 @@ class Settings(BaseSettings):
 
     # Image processing
     max_image_dimension: int = 2048
-    image_quality: int = 82
+    image_quality: int = 85
     supported_image_formats: list[str] = ["jpg", "jpeg", "png", "webp"]
     max_images_per_request: int = 10
 

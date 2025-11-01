@@ -1,7 +1,4 @@
-"""Build the system and user prompts for the OpenAI API call.
-
-Supports text-only and multimodal (vision) message construction.
-"""
+"""Build the system and user prompts for the OpenAI API call."""
 
 from __future__ import annotations
 
@@ -85,7 +82,6 @@ def _format_case(case: CaseInput) -> str:
     return "\n".join(lines) if lines else "No structured case details provided."
 
 
-# -- JSON response schema sent as part of the user prompt ----------------
 RESPONSE_SCHEMA_INSTRUCTION = """
 ═══════════════════════════════════════════════════
 RESPONSE JSON SCHEMA (respond with EXACTLY this structure)

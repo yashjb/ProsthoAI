@@ -3,7 +3,6 @@
 Parquet files are generated ONCE via the ``generate_parquet.py`` script.
 At server startup we simply verify they exist and pre-load them into
 memory for fast retrieval.  PDFs are NEVER re-read at runtime.
-This ensures sub-second startup after the initial generation step.
 """
 
 from __future__ import annotations
@@ -24,7 +23,6 @@ def initialize_pdf_cache() -> None:
     global _initialized
 
     parquet_dir = settings.parquet_folder
-    logger.debug("Parquet directory: %s", parquet_dir)
     chunks_path = os.path.join(parquet_dir, "chunks.parquet")
 
     if not os.path.exists(chunks_path):

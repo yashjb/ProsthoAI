@@ -6,7 +6,6 @@ const steps = [
   { icon: Stethoscope, text: 'Generating treatment plan…' },
 ];
 
-/** Displays animated loading indicator while AI processes the case. */
 export default function LoadingState() {
   return (
     <div className="flex flex-col items-center justify-center py-20 space-y-8">

@@ -1,4 +1,4 @@
-"""Convert uploaded images (including DNG / RAW / HEIC formats) to JPEG for the
+"""Convert uploaded images (including DNG / RAW formats) to JPEG for the
 OpenAI vision API."""
 
 from __future__ import annotations
