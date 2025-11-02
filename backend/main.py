@@ -1,4 +1,5 @@
 """FastAPI application entry-point."""
+# Manages CORS, lifespan events, and health-check endpoint
 
 from __future__ import annotations
 
