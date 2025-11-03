@@ -49,3 +49,13 @@ body {
 .card-hover {
   @apply transition-shadow duration-200 hover:shadow-lg;
 }
+
+/* Result entrance animation */
+.fade-in {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
