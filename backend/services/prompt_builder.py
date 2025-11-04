@@ -71,7 +71,6 @@ def _format_case(case: CaseInput) -> str:
         ("Esthetic Concerns", case.esthetic_concerns),
         ("Functional Concerns", case.functional_concerns),
         ("Radiographic Findings", case.radiographic_findings),
-        ("Provisional Diagnosis", case.provisional_diagnosis),
         ("Proposed Treatment by Clinician", case.proposed_treatment),
         ("Budget Sensitivity", case.budget_sensitivity),
         ("Time Constraints", case.time_constraints),
@@ -189,13 +188,6 @@ RESPONSE JSON SCHEMA (respond with EXACTLY this structure)
         "source": "<Journal/textbook name and year — only if PDF evidence was insufficient>",
         "summary": "<What this source contributes>",
         "why_it_matters": "<Why external evidence was needed here>"
-      }
-    ],
-    "conflicts_or_updates": [
-      {
-        "older_pdf_position": "<What the PDF states>",
-        "newer_understanding": "<Current evidence-based position>",
-        "clinical_impact": "<How this affects treatment for THIS patient>"
       }
     ]
   },

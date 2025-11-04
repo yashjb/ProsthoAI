@@ -1,4 +1,5 @@
 """FastAPI application entry-point."""
+# Manages CORS, lifespan events, and health-check endpoint
 
 from __future__ import annotations
 
@@ -12,7 +13,8 @@ from config.settings import settings
 from api.routes import router
 
 logger = logging.getLogger(__name__)
-__version__ = "0.2.0"
+__version__ = "1.0.0"
+# Version tracks Parquet schema compatibility — bump on breaking changes
 
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
@@ -27,16 +29,18 @@ async def lifespan(app: FastAPI):
     # ── Startup: pre-load and chunk all dental PDFs ──────────────────────
     from services.pdf_cache import initialize_pdf_cache
 
-    logger.info("ProsthoAI %s starting up", __version__)
+    import time as _time; _t0 = _time.monotonic()
+    logger.info("Prosthetic Intelligence %s starting up", __version__)
     initialize_pdf_cache()
     yield
+    logger.info("Prosthetic Intelligence shutting down")
     # ── Shutdown ─────────────────────────────────────────────────────────
 
 
 app = FastAPI(
-    title="ProsthoAI — Treatment Planning Assistant",
+    title="Prosthetic Intelligence — Treatment Planning Assistant",
     version="1.0.0",
-    description="AI-powered prosthodontic clinical decision-support tool - semantic PDF retrieval and multimodal vision analysis.",
+    description="Prosthetic Intelligence: clinical decision-support tool — semantic PDF retrieval and multimodal vision analysis.",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     lifespan=lifespan,
@@ -48,7 +52,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    max_age=3600,
+    max_age=86400,  # 24 h - reduces preflight OPTIONS round-trips
 )
 
 app.include_router(router, prefix="/api")
