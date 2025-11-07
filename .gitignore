@@ -28,10 +28,7 @@ yarn-error.log*
 # OS
 .DS_Store
 Thumbs.db
-dental_pdf
+dental pdf
 answer*.md
 start.txt
 dental_knowledge.db
-
-# Sensitive local scripts
-backend/testkey.py
