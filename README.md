@@ -316,3 +316,10 @@ MIT License - See LICENSE file for details
 - **Empty AI response**: Increase `OPENAI_MAX_TOKENS` for reasoning models.
 - **Corrupt PDF**: Re-export from source; `PyPDF2` cannot decode encrypted files.
 - **RAW image fails**: Install `rawpy` and `numpy` for DNG/CR2/NEF support.
+
+## Performance
+
+- Semantic search: < 300 ms once embeddings are cached in memory.
+- Vision analysis: 5-15 s depending on image count and model latency.
+- Full case analysis: 30-90 s end-to-end.
+- Token usage: ~8000-18000 tokens per case depending on PDF context depth.
