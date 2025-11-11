@@ -51,7 +51,10 @@ def _fallback_response(error_detail: str) -> TreatmentResponse:
     """Return a safe fallback response when parsing/validation fails."""
     return TreatmentResponse(
         case_summary="The AI was unable to produce a fully structured response for this case.",
-        need_more_information=["Please re-submit the case. If the issue persists, simplify the input."],
+        need_more_information=[
+            "Please re-submit the case.",
+            "If the issue persists, simplify the clinical notes or reduce the number of images.",
+        ],
         red_flags=[],
         confidence_level="low",
         disclaimer=_DEFAULT_DISCLAIMER,
