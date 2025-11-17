@@ -78,7 +78,7 @@ def process_image_for_openai(
     """
     try:
         if _is_raw_format(filename):
-            logger.info("Converting RAW image: %s", filename)
+            logger.info("Processing RAW: %s (%d KiB)", filename, len(file_bytes) // 1024)
             img = _convert_raw_to_pil(file_bytes, filename)
         else:
             img = Image.open(io.BytesIO(file_bytes))
