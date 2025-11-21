@@ -81,7 +81,7 @@ _VISION_SYSTEM = (
     "4. Assess occlusal relationships if visible\n"
     "5. Note arch form, spacing, crowding\n"
     "6. Describe prosthetic work: implants, crowns, bridges, partial/complete dentures\n"
-    "7. Flag any abnormalities or red flags\n\n"
+    "7. Flag abnormalities, red flags, and findings requiring urgent specialist referral\n\n"
     "Be precise and clinical. Use FDI tooth notation where possible. "
     "This is NOT a diagnosis — these are observational findings to support "
     "a prosthodontist's assessment."
