@@ -323,3 +323,18 @@ MIT License - See LICENSE file for details
 - Vision analysis: 5-15 s depending on image count and model latency.
 - Full case analysis: 30-90 s end-to-end.
 - Token usage: ~8000-18000 tokens per case depending on PDF context depth.
+
+## API Reference
+
+### POST `/api/analyze`
+
+Accepts `multipart/form-data`:
+
+| Field | Type | Required |
+|-------|------|----------|
+| `case_data` | JSON string | Yes |
+| `photo_extraoral_smile` | File | No |
+| `photo_intraoral_*` | File | No |
+| `photo_maxillary_arch` | File | No |
+
+Returns: `APIResponse { success, data: TreatmentResponse }`.
