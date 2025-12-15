@@ -50,7 +50,7 @@ def validate_response(raw_json: str) -> TreatmentResponse:
 def _fallback_response(error_detail: str) -> TreatmentResponse:
     """Return a safe fallback response when parsing/validation fails."""
     return TreatmentResponse(
-        case_summary="The AI was unable to produce a fully structured response for this case.",
+        case_summary="The AI was unable to produce a fully structured response. Please check inputs and retry.",
         need_more_information=[
             "Please re-submit the case.",
             "If the issue persists, simplify the clinical notes or reduce the number of images.",
