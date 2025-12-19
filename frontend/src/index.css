@@ -69,3 +69,11 @@ body {
 .dark :focus-visible {
   @apply ring-blue-400 ring-offset-slate-900;
 }
+
+/* Accessibility - reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
