@@ -12,7 +12,7 @@ from config.settings import settings
 from api.routes import router
 
 logger = logging.getLogger(__name__)
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
