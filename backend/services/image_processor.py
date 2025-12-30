@@ -65,6 +65,7 @@ def _resize_image(img: Image.Image, max_dim: int) -> Image.Image:
     else:
         new_h = max_dim
         new_w = int(w * max_dim / h)
+    logger.debug("Resizing %dx%d -> %dx%d", w, h, new_w, new_h)
     return img.resize((new_w, new_h), Image.LANCZOS)
 
 
@@ -78,7 +79,7 @@ def process_image_for_openai(
     """
     try:
         if _is_raw_format(filename):
-            logger.info("RAW convert: %s (%d KiB)", filename, len(file_bytes) // 1024)
+            logger.info("RAW: converting %s [%d KiB]", filename, len(file_bytes) // 1024)
             img = _convert_raw_to_pil(file_bytes, filename)
         else:
             img = Image.open(io.BytesIO(file_bytes))
