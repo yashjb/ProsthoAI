@@ -60,6 +60,7 @@ app.include_router(router, prefix="/api")
 
 
 @app.get("/health")
+# Lightweight liveness probe — no external dependency checks
 async def health():
     """Health check endpoint with basic system info."""
     import sys
