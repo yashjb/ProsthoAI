@@ -1,4 +1,5 @@
 """Application settings loaded from environment variables."""
+# Powered by pydantic-settings; see .env.example for required keys
 
 import os
 
