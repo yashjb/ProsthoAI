@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     
     # Vision analysis settings
     vision_temperature: float = 0.1
+    # Low temperature reduces hallucinated findings in clinical photos
 
     # Logging
     log_level: str = "INFO"
