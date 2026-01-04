@@ -56,6 +56,7 @@ class Settings(BaseSettings):
 
     # Retrieval
     retrieval_top_k: int = 20
+    # Empirically tuned — higher values add latency without recall gain
 
     # PDF processing
     max_pdf_size_mb: int = 20
