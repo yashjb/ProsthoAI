@@ -338,3 +338,12 @@ Accepts `multipart/form-data`:
 | `photo_maxillary_arch` | File | No |
 
 Returns: `APIResponse { success, data: TreatmentResponse }`.
+
+## Clinical Use Cases
+
+| Scenario | How ProsthoAI Helps |
+|----------|---------------------|
+| Worn dentition | Turner-Missirlian classification, VDO assessment, full-mouth rehab guidance |
+| Missing posterior teeth | RPD vs implant decision support with bone and occlusion context |
+| Aesthetic rehabilitation | Shade planning, smile design, veneer vs crown criteria |
+| Compromised abutments | Risk stratification, post-core considerations |
