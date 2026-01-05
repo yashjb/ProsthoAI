@@ -121,9 +121,16 @@ class ExternalReference(BaseModel):
     why_it_matters: str = ""
 
 
+class ConflictOrUpdate(BaseModel):
+    older_pdf_position: str = ""
+    newer_understanding: str = ""
+    clinical_impact: str = ""
+
+
 class EvidenceBreakdown(BaseModel):
     pdf_references: list[PdfReference] = []
     external_references: list[ExternalReference] = []
+    conflicts_or_updates: list[ConflictOrUpdate] = []
 
 
 class MaterialChoice(BaseModel):
