@@ -1,4 +1,5 @@
 """API route for treatment planning."""
+# Single POST endpoint: /api/analyze (stateless, multipart/form-data)
 
 from __future__ import annotations
 
