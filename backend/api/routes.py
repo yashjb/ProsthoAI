@@ -18,6 +18,7 @@ from services.response_validator import validate_response
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+# Photo fields are optional — vision pipeline is skipped when absent
 
 # Mapping: form-field name → human-readable label shown to the AI
 _PHOTO_FIELDS: list[tuple[str, str]] = [
