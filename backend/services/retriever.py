@@ -71,7 +71,6 @@ def retrieve_relevant_chunks(
             seen_keys.add(key)
             deduped.append((s, c))
     scored = deduped
-    logger.debug("After dedup: %d unique chunks", len(scored))
     scored.sort(key=lambda x: x[0], reverse=True)
 
     # Filter out zero-score chunks if we have enough non-zero ones
