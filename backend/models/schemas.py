@@ -1,4 +1,5 @@
 """Pydantic schemas for request/response validation."""
+# Mirrors the TypeScript interfaces in frontend/src/types.ts
 
 from __future__ import annotations
 
