@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class CaseInput(BaseModel):
     """Clinical case details from the input form."""
+    # All fields default to empty string — partial submissions are valid
 
     patient_age: str = ""
     patient_sex: str = ""
