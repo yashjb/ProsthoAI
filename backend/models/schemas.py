@@ -52,6 +52,7 @@ class CaseInput(BaseModel):
 
 class DiagnosisClassification(BaseModel):
     """Specific diagnosis with classification (e.g. Turner & Missirlian)."""
+    # Maps to prosthodontic classification frameworks
     classification_system: str = ""
     specific_class: str = ""
     definitive_diagnosis: str = ""
