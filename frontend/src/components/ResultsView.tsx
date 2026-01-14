@@ -452,6 +452,28 @@ export default function ResultsView({ data, onBack }: Props) {
           </div>
         )}
 
+        {/* Conflicts */}
+        {data.evidence_breakdown?.conflicts_or_updates?.length > 0 && (
+          <div>
+            <h3 className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-3 uppercase tracking-wide">Conflicts / Updates</h3>
+            <div className="space-y-3">
+              {data.evidence_breakdown.conflicts_or_updates.map((c, i) => (
+                <div key={i} className="rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 space-y-1">
+                  <p className="text-sm text-slate-700 dark:text-slate-300">
+                    <span className="font-semibold text-amber-700 dark:text-amber-400">Older (PDF):</span>{' '}
+                    {c.older_pdf_position}
+                  </p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300">
+                    <span className="font-semibold text-green-700 dark:text-green-400">Newer understanding:</span>{' '}
+                    {c.newer_understanding}
+                  </p>
+                  <p className="text-xs text-slate-500">Clinical impact: {c.clinical_impact}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {!data.evidence_breakdown?.pdf_references?.length &&
           !data.evidence_breakdown?.external_references?.length && (
             <p className="text-sm text-slate-400 italic">No evidence breakdown available.</p>
