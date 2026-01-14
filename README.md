@@ -347,3 +347,9 @@ Returns: `APIResponse { success, data: TreatmentResponse }`.
 | Missing posterior teeth | RPD vs implant decision support with bone and occlusion context |
 | Aesthetic rehabilitation | Shade planning, smile design, veneer vs crown criteria |
 | Compromised abutments | Risk stratification, post-core considerations |
+
+## Embedding Cache
+
+PDF text is chunked and embedded once. The resulting data survives server
+restarts. Re-embedding is only triggered when PDF folder content changes
+(detected via SHA-256 folder fingerprint).
