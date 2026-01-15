@@ -1,4 +1,5 @@
 """Split extracted PDF text into manageable chunks with overlap."""
+# Uses tiktoken GPT-4o tokenizer for accurate sub-word counting
 
 from __future__ import annotations
 
