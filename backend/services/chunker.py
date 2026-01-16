@@ -13,6 +13,7 @@ from config.settings import settings
 logger = logging.getLogger(__name__)
 
 _enc = tiktoken.encoding_for_model("gpt-4o")
+# Cached at module level to avoid reloading BPE merge table per call
 
 
 def _count_tokens(text: str) -> int:
