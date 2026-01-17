@@ -9,6 +9,7 @@ import logging
 import tiktoken
 
 from config.settings import settings
+# Chunk sizes are configurable via settings for experimentation
 
 logger = logging.getLogger(__name__)
 
