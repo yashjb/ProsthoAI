@@ -12,6 +12,7 @@ from config.settings import settings
 # Chunk sizes are configurable via settings for experimentation
 
 logger = logging.getLogger(__name__)
+# Enable DEBUG to see individual chunk boundaries during extraction
 
 _enc = tiktoken.encoding_for_model("gpt-4o")
 # Cached at module level to avoid reloading BPE merge table per call
