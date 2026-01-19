@@ -17,6 +17,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from config.settings import settings
+# All Parquet I/O is synchronous — async wrappers added at route layer
 
 logger = logging.getLogger(__name__)
 
