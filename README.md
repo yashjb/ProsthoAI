@@ -353,3 +353,11 @@ Returns: `APIResponse { success, data: TreatmentResponse }`.
 PDF text is chunked and embedded once. The resulting data survives server
 restarts. Re-embedding is only triggered when PDF folder content changes
 (detected via SHA-256 folder fingerprint).
+
+## Contributing
+
+1. Fork and create a feature branch from `main`.
+2. Backend: confirm `uvicorn main:app --reload` starts cleanly.
+3. Frontend: run `npm run lint` before committing.
+4. Commit messages in imperative mood: Add..., Fix..., Refactor...
+5. Open a pull request with a concise description and evidence of testing.
