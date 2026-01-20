@@ -60,8 +60,8 @@ export default function App() {
         {view === 'form' && (
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-              Prosthetic Intelligence <br className="hidden sm:block" />
-              Treatment Planning Assistant
+              AI-Powered Prosthodontic <br className="hidden sm:block" />
+              Treatment Planning
             </h2>
             <p className="mt-3 text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
               Enter the patient case details, upload clinical photographs, and
@@ -89,7 +89,7 @@ export default function App() {
       </main>
 
       <footer className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200 dark:border-slate-800">
-        Prosthetic Intelligence — Clinical Decision-Support Tool • Not a substitute for professional judgment
+        ProsthoAI — Clinical Decision-Support Tool • Not a substitute for professional judgment
       </footer>
     </div>
   );
