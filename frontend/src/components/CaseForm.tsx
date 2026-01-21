@@ -128,12 +128,6 @@ const SECTIONS: { title: string; fields: FieldDef[] }[] = [
         rows: 3,
       },
       {
-        key: 'provisional_diagnosis',
-        label: 'Provisional Diagnosis',
-        placeholder: 'Working diagnosis…',
-        rows: 2,
-      },
-      {
         key: 'proposed_treatment',
         label: 'Proposed Treatment by Clinician',
         placeholder: 'Your initial treatment idea…',

@@ -1,5 +1,5 @@
 {
-  "name": "prostho-ai-frontend",
+  "name": "prosthetic-intelligence-frontend",
   "private": true,
   "version": "1.0.4",
   "type": "module",
@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "tsc --noEmit",
-    "clean": "rm -rf dist node_modules/.vite"
+    "clean": "rm -rf dist node_modules/.vite",
+    "type-check": "tsc --noEmit --strict"
   },
   "dependencies": {
     "react": "^18.3.1",
