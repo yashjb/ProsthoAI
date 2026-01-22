@@ -32,6 +32,7 @@ def _chunks_path() -> str:
 
 
 def _chunks_text_path() -> str:
+    """Path to the text-only chunk Parquet (no embeddings)."""
     return os.path.join(_get_parquet_dir(), "chunks_text.parquet")
 
 
