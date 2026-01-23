@@ -37,6 +37,7 @@ def _chunks_text_path() -> str:
 
 
 def _meta_path() -> str:
+    """Path to the Parquet metadata file (ingestion fingerprints)."""
     return os.path.join(_get_parquet_dir(), "meta.parquet")
 
 
