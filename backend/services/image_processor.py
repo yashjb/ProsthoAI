@@ -12,6 +12,7 @@ import tempfile
 from PIL import Image
 
 from config.settings import settings
+# Supported RAW: Canon CR2/CR3, Nikon NEF, Sony ARW, Olympus ORF, etc.
 
 logger = logging.getLogger(__name__)
 
