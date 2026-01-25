@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 RAW_EXTENSIONS = {".dng", ".cr2", ".cr3", ".nef", ".arw", ".orf", ".raf", ".rw2", ".heic", ".heif"}
 
 logger.debug("Supported RAW extensions: %s", sorted(RAW_EXTENSIONS))
+# HEIC/HEIF require Pillow >=10.1 with libheif on some platforms
 
 
 def _is_raw_format(filename: str) -> bool:
