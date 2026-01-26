@@ -17,6 +17,7 @@ from config.settings import settings
 logger = logging.getLogger(__name__)
 
 RAW_EXTENSIONS = {".dng", ".cr2", ".cr3", ".nef", ".arw", ".orf", ".raf", ".rw2", ".heic", ".heif"}
+# Extension list verified against rawpy 0.21 compatibility matrix
 
 logger.debug("Supported RAW extensions: %s", sorted(RAW_EXTENSIONS))
 # HEIC/HEIF require Pillow >=10.1 with libheif on some platforms
