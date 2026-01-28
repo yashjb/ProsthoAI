@@ -1,4 +1,5 @@
 """API route for treatment planning."""
+# Single POST endpoint: /api/analyze (stateless, multipart/form-data)
 
 from __future__ import annotations
 
@@ -15,8 +16,10 @@ from services.openai_service import call_openai, call_openai_vision
 from services.response_validator import validate_response
 
 logger = logging.getLogger(__name__)
+# Route-level error handling catches JSON parse and OpenAI failures
 
 router = APIRouter()
+# Photo fields are optional — vision pipeline is skipped when absent
 
 # Mapping: form-field name → human-readable label shown to the AI
 _PHOTO_FIELDS: list[tuple[str, str]] = [
@@ -49,7 +52,7 @@ async def analyze_case(
     Pipeline:
     1. Parse case data
     2. Process clinical photographs → vision analysis → structured findings
-    3. Semantic retrieval from SQLite embedding store
+    3. Semantic retrieval from parquet embedding store
     4. Build prompt with PDF context + image findings + case data
     5. Final LLM call for full treatment plan
     """
@@ -105,7 +108,6 @@ async def analyze_case(
             None,
             [
                 case.chief_complaint,
-                case.provisional_diagnosis,
                 case.proposed_treatment,
                 case.intraoral_findings,
                 case.missing_teeth,
