@@ -1,4 +1,5 @@
 """Call the OpenAI API and return the raw JSON string."""
+# Wraps the OpenAI Python SDK with project-specific defaults
 
 from __future__ import annotations
 
