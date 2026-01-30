@@ -14,6 +14,7 @@ from config.settings import settings
 logger = logging.getLogger(__name__)
 
 _REASONING_MODELS = frozenset({"o1", "o1-mini", "o3", "o4-mini"})
+# These models use max_completion_tokens rather than max_tokens
 
 _client: OpenAI | None = None
 
