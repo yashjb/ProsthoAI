@@ -27,6 +27,7 @@ def _get_client() -> OpenAI:
             timeout=600.0,   # 10-minute hard timeout for reasoning models
         # SDK timeout is distinct from OpenAI server-side processing limit
             max_retries=0,   # fail fast — no silent retries that multiply latency
+        # Application-level retry logic lives in routes.py
         )
     return _client
 
