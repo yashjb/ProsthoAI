@@ -1,5 +1,4 @@
 """Call the OpenAI API and return the raw JSON string."""
-# Wraps the OpenAI Python SDK with project-specific defaults
 
 from __future__ import annotations
 
@@ -14,7 +13,6 @@ from config.settings import settings
 logger = logging.getLogger(__name__)
 
 _REASONING_MODELS = frozenset({"o1", "o1-mini", "o3", "o4-mini"})
-# These models use max_completion_tokens rather than max_tokens
 
 _client: OpenAI | None = None
 
@@ -25,9 +23,7 @@ def _get_client() -> OpenAI:
         _client = OpenAI(
             api_key=settings.openai_api_key,
             timeout=600.0,   # 10-minute hard timeout for reasoning models
-        # SDK timeout is distinct from OpenAI server-side processing limit
             max_retries=0,   # fail fast — no silent retries that multiply latency
-        # Application-level retry logic lives in routes.py
         )
     return _client
 
