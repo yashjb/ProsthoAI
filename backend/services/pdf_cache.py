@@ -12,6 +12,7 @@ import os
 
 from services.embedding_store import chunk_count, _load_cache
 from config.settings import settings
+# Cache is populated once at startup and never refreshed at runtime
 
 logger = logging.getLogger(__name__)
 
