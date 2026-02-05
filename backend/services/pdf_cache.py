@@ -17,6 +17,7 @@ from config.settings import settings
 logger = logging.getLogger(__name__)
 
 _initialized = False
+# Guard flag prevents duplicate initialisation on hot-reload
 
 
 def initialize_pdf_cache() -> None:
