@@ -22,6 +22,7 @@ _initialized = False
 
 def initialize_pdf_cache() -> None:
     """Verify parquet files exist and pre-load embeddings into memory."""
+    # Called from lifespan() in main.py at server startup
     global _initialized
 
     parquet_dir = settings.parquet_folder
