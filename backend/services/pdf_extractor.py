@@ -1,5 +1,4 @@
 """Extract text from uploaded PDF files in-memory."""
-# Uses PyPDF2 — no external binaries or poppler dependency needed
 
 from __future__ import annotations
 
@@ -7,7 +6,6 @@ import io
 import logging
 
 from PyPDF2 import PdfReader
-# PdfReader handles both linearised and non-linearised PDFs
 
 logger = logging.getLogger(__name__)
 

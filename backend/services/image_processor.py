@@ -12,19 +12,15 @@ import tempfile
 from PIL import Image
 
 from config.settings import settings
-# Supported RAW: Canon CR2/CR3, Nikon NEF, Sony ARW, Olympus ORF, etc.
 
 logger = logging.getLogger(__name__)
 
 RAW_EXTENSIONS = {".dng", ".cr2", ".cr3", ".nef", ".arw", ".orf", ".raf", ".rw2", ".heic", ".heif"}
-# Extension list verified against rawpy 0.21 compatibility matrix
 
 logger.debug("Supported RAW extensions: %s", sorted(RAW_EXTENSIONS))
-# HEIC/HEIF require Pillow >=10.1 with libheif on some platforms
 
 
 def _is_raw_format(filename: str) -> bool:
-    """Check whether *filename* has a known RAW camera extension."""
     ext = os.path.splitext(filename)[1].lower()
     return ext in RAW_EXTENSIONS
 
@@ -69,7 +65,6 @@ def _resize_image(img: Image.Image, max_dim: int) -> Image.Image:
     else:
         new_h = max_dim
         new_w = int(w * max_dim / h)
-    logger.debug("Resizing %dx%d -> %dx%d", w, h, new_w, new_h)
     return img.resize((new_w, new_h), Image.LANCZOS)
 
 
