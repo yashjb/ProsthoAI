@@ -361,3 +361,10 @@ restarts. Re-embedding is only triggered when PDF folder content changes
 3. Frontend: run `npm run lint` before committing.
 4. Commit messages in imperative mood: Add..., Fix..., Refactor...
 5. Open a pull request with a concise description and evidence of testing.
+
+## License and Disclaimer
+
+This software is for **educational and research purposes** only.
+It is **not a certified medical device** and must not be the sole basis
+for clinical decisions. All outputs must be reviewed by a qualified
+dental professional before clinical use.
