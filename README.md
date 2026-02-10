@@ -1,4 +1,4 @@
-# ProsthoAI — AI-Powered Prosthodontic Treatment Planning Assistant
+# Prosthetic Intelligence — Treatment Planning Assistant
 
 A modern clinical decision-support web application that combines uploaded PDF reference material with AI-powered analysis to generate structured prosthodontic treatment plans.
 
@@ -341,7 +341,7 @@ Returns: `APIResponse { success, data: TreatmentResponse }`.
 
 ## Clinical Use Cases
 
-| Scenario | How ProsthoAI Helps |
+| Scenario | How Prosthetic Intelligence Helps |
 |----------|---------------------|
 | Worn dentition | Turner-Missirlian classification, VDO assessment, full-mouth rehab guidance |
 | Missing posterior teeth | RPD vs implant decision support with bone and occlusion context |
@@ -368,3 +368,11 @@ This software is for **educational and research purposes** only.
 It is **not a certified medical device** and must not be the sole basis
 for clinical decisions. All outputs must be reviewed by a qualified
 dental professional before clinical use.
+
+## Storage Backend
+
+Embeddings were initially stored in a local **SQLite database**.
+The system is migrating to **Apache Parquet files** for:
+- Zero-dependency portability (no SQLite runtime required in production)
+- Fast bulk-load at startup via NumPy vectorised cosine similarity
+- Inspectable, portable pre-computed embedding files
