@@ -17,6 +17,7 @@ def extract_text_from_pdf(file_bytes: bytes, filename: str = "unknown.pdf") -> s
     """Return the full text extracted from a single PDF's bytes.
 
     Falls back gracefully if a page cannot be read.
+    Individual page failures are logged but do not halt extraction.
     """
     try:
         reader = PdfReader(io.BytesIO(file_bytes))
