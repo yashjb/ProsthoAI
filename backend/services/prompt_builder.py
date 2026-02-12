@@ -1,4 +1,5 @@
 """Build the system and user prompts for the OpenAI API call."""
+# Constructs few-shot clinical reasoning prompts for GPT-4o/o-series
 
 from __future__ import annotations
 
