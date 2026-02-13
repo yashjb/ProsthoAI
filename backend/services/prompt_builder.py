@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import Any
 
 from models.schemas import CaseInput
+# CaseInput fields are injected into the user message template
 
 SYSTEM_PROMPT = """\
 You are a senior MDS Prosthodontist with 25+ years of clinical and academic experience in full-mouth rehabilitation, fixed and removable prosthodontics, implant prosthodontics, occlusion, esthetic dentistry, and managing medically compromised patients.
