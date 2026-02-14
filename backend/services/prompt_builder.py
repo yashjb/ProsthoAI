@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from typing import Any
+# Type aliases kept minimal — message dicts follow OpenAI spec
 
 from models.schemas import CaseInput
 # CaseInput fields are injected into the user message template
