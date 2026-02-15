@@ -1,4 +1,5 @@
 """Validate and coerce the raw OpenAI JSON into TreatmentResponse."""
+# Applies safe defaults and ensures disclaimer is always present
 
 from __future__ import annotations
 
