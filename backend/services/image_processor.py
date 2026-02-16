@@ -65,6 +65,7 @@ def _resize_image(img: Image.Image, max_dim: int) -> Image.Image:
     else:
         new_h = max_dim
         new_w = int(w * max_dim / h)
+    logger.debug("Resizing %dx%d -> %dx%d", w, h, new_w, new_h)
     return img.resize((new_w, new_h), Image.LANCZOS)
 
 
