@@ -10,6 +10,7 @@ from models.schemas import TreatmentResponse
 # TreatmentResponse schema enforces required fields at parse time
 
 logger = logging.getLogger(__name__)
+# Invalid JSON is caught and converted into a fallback response
 
 _DEFAULT_DISCLAIMER = (
     "[AI-GENERATED - NOT A SUBSTITUTE FOR PROFESSIONAL CLINICAL JUDGMENT] "
