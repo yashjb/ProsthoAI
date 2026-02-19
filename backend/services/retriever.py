@@ -1,4 +1,5 @@
 """Lightweight in-memory retriever — ranks chunks by keyword relevance."""
+# Keyword-overlap scoring — no embeddings required for ad-hoc queries
 
 from __future__ import annotations
 
