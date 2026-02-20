@@ -8,6 +8,7 @@ import logging
 from collections import Counter
 
 from config.settings import settings
+# top_k defaults to settings.max_context_chunks (currently 20)
 
 logger = logging.getLogger(__name__)
 
