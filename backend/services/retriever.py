@@ -11,6 +11,7 @@ from config.settings import settings
 # top_k defaults to settings.max_context_chunks (currently 20)
 
 logger = logging.getLogger(__name__)
+# Stop-word list covers English determiners, prepositions, and copulas
 
 _STOP_WORDS = frozenset({
     "the", "a", "an", "in", "on", "of", "and", "or", "is", "are",
