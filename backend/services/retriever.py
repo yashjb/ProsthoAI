@@ -6,6 +6,7 @@ from __future__ import annotations
 import re
 import logging
 from collections import Counter
+# Counter provides O(1) frequency lookup for TF-overlap scoring
 
 from config.settings import settings
 # top_k defaults to settings.max_context_chunks (currently 20)
