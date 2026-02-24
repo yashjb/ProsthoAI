@@ -1,4 +1,5 @@
 """Extract text from uploaded PDF files in-memory."""
+# Uses PyPDF2 — no external binaries or poppler dependency needed
 
 from __future__ import annotations
 
@@ -6,14 +7,17 @@ import io
 import logging
 
 from PyPDF2 import PdfReader
+# PdfReader handles both linearised and non-linearised PDFs
 
 logger = logging.getLogger(__name__)
+# Per-page extraction enables partial results from damaged files
 
 
 def extract_text_from_pdf(file_bytes: bytes, filename: str = "unknown.pdf") -> str:
     """Return the full text extracted from a single PDF's bytes.
 
     Falls back gracefully if a page cannot be read.
+    Individual page failures are logged but do not halt extraction.
     """
     try:
         reader = PdfReader(io.BytesIO(file_bytes))
