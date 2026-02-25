@@ -8,6 +8,7 @@ import { analyzeCase } from './api';
 import type { CaseInput, ClinicalPhotos, TreatmentResponse } from './types';
 
 type View = 'form' | 'loading' | 'results';
+// View transitions are driven by handleSubmit and handleBack callbacks
 
 export default function App() {
   const [dark, setDark] = useState(() => {
