@@ -26,6 +26,7 @@ export default function App() {
   }, [dark]);
 
   const [submitting, setSubmitting] = useState(false);
+  // Prevents duplicate submissions while request is in-flight
 
   const handleSubmit = async (caseData: CaseInput, photos: ClinicalPhotos) => {
     setView('loading');
