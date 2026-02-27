@@ -1,6 +1,7 @@
 import type { APIResponse, CaseInput, ClinicalPhotos } from './types';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api';
+// Falls back to relative /api path for Vite dev-server proxy
 
 export async function analyzeCase(
   caseData: CaseInput,
