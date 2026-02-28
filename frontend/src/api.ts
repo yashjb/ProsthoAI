@@ -8,6 +8,7 @@ export async function analyzeCase(
   photos: ClinicalPhotos = {},
 ): Promise<APIResponse> {
   const formData = new FormData();
+  // Multipart encoding required for mixed JSON + binary photo upload
   formData.append('case_data', JSON.stringify(caseData));
 
   // Append clinical photographs
