@@ -4,6 +4,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 // Falls back to relative /api path for Vite dev-server proxy
 
 export async function analyzeCase(
+/** Submit case data and optional clinical photos for AI analysis. */
   caseData: CaseInput,
   photos: ClinicalPhotos = {},
 ): Promise<APIResponse> {
