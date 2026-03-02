@@ -3,22 +3,9 @@ cd backend
 python -m venv env && env\Scripts\activate
 pip install -r requirements.txt
 copy .env.example .env    # then set OPENAI_API_KEY
-
-# Generate parquet files (ONE-TIME — reads PDFs, chunks, embeds, saves to parquet_files/)
-python generate_parquet.py
-
-# Start server (uses pre-computed parquet files, no PDF re-reading)
 uvicorn main:app --reload --port 8000
 
 # Frontend (new terminal)
 cd frontend
 npm install
 npm run dev
-
-# Regenerate parquet files (when PDFs change) ──
-# cd backend
-# env\Scripts\activate
-# python generate_parquet.py
-
-# Read text chunks → embed → save final parquet
-python generate_embeddings.py

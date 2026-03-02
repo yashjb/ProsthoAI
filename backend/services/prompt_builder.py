@@ -1,13 +1,10 @@
 """Build the system and user prompts for the OpenAI API call."""
-# Constructs few-shot clinical reasoning prompts for GPT-4o/o-series
 
 from __future__ import annotations
 
 from typing import Any
-# Type aliases kept minimal — message dicts follow OpenAI spec
 
 from models.schemas import CaseInput
-# CaseInput fields are injected into the user message template
 
 SYSTEM_PROMPT = """\
 You are a senior MDS Prosthodontist with 25+ years of clinical and academic experience in full-mouth rehabilitation, fixed and removable prosthodontics, implant prosthodontics, occlusion, esthetic dentistry, and managing medically compromised patients.
@@ -74,6 +71,7 @@ def _format_case(case: CaseInput) -> str:
         ("Esthetic Concerns", case.esthetic_concerns),
         ("Functional Concerns", case.functional_concerns),
         ("Radiographic Findings", case.radiographic_findings),
+        ("Provisional Diagnosis", case.provisional_diagnosis),
         ("Proposed Treatment by Clinician", case.proposed_treatment),
         ("Budget Sensitivity", case.budget_sensitivity),
         ("Time Constraints", case.time_constraints),
@@ -191,6 +189,13 @@ RESPONSE JSON SCHEMA (respond with EXACTLY this structure)
         "source": "<Journal/textbook name and year — only if PDF evidence was insufficient>",
         "summary": "<What this source contributes>",
         "why_it_matters": "<Why external evidence was needed here>"
+      }
+    ],
+    "conflicts_or_updates": [
+      {
+        "older_pdf_position": "<What the PDF states>",
+        "newer_understanding": "<Current evidence-based position>",
+        "clinical_impact": "<How this affects treatment for THIS patient>"
       }
     ]
   },
