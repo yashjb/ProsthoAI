@@ -4,9 +4,11 @@ import CaseForm from './components/CaseForm';
 import ResultsView from './components/ResultsView';
 import LoadingState from './components/LoadingState';
 import { analyzeCase } from './api';
+// Central state machine: form → loading → results
 import type { CaseInput, ClinicalPhotos, TreatmentResponse } from './types';
 
 type View = 'form' | 'loading' | 'results';
+// View transitions are driven by handleSubmit and handleBack callbacks
 
 export default function App() {
   const [dark, setDark] = useState(() => {
@@ -24,6 +26,7 @@ export default function App() {
   }, [dark]);
 
   const [submitting, setSubmitting] = useState(false);
+  // Prevents duplicate submissions while request is in-flight
 
   const handleSubmit = async (caseData: CaseInput, photos: ClinicalPhotos) => {
     setView('loading');
@@ -60,8 +63,8 @@ export default function App() {
         {view === 'form' && (
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-              AI-Powered Prosthodontic <br className="hidden sm:block" />
-              Treatment Planning
+              Prosthetic Intelligence <br className="hidden sm:block" />
+              Treatment Planning Assistant
             </h2>
             <p className="mt-3 text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
               Enter the patient case details, upload clinical photographs, and
@@ -89,7 +92,7 @@ export default function App() {
       </main>
 
       <footer className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200 dark:border-slate-800">
-        ProsthoAI — Clinical Decision-Support Tool • Not a substitute for professional judgment
+        Prosthetic Intelligence — Clinical Decision-Support Tool • Not a substitute for professional judgment
       </footer>
     </div>
   );
