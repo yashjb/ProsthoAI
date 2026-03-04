@@ -2,6 +2,7 @@
 // Auto-sync with backend/models/schemas.py when adding fields
 
 export interface CaseInput {
+/** Clinical case input fields — all optional for partial submissions. */
   patient_age: string;
   patient_sex: string;
   chief_complaint: string;
