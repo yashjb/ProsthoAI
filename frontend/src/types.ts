@@ -27,6 +27,7 @@ export interface CaseInput {
 }
 
 export const emptyCaseInput: CaseInput = {
+/** Default empty form state — every field starts blank. */
   patient_age: '',
   patient_sex: '',
   chief_complaint: '',
