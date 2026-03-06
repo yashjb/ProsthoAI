@@ -1,4 +1,5 @@
 import { useState, ReactNode } from 'react';
+// Reusable collapsible section used throughout the results view
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface Props {
