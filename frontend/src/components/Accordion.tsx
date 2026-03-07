@@ -3,6 +3,7 @@ import { useState, ReactNode } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface Props {
+/** Props for the collapsible Accordion component. */
   title: string;
   children: ReactNode;
   defaultOpen?: boolean;
