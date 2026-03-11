@@ -1,8 +1,6 @@
 /* ── Types matching the backend JSON schema ── */
-// Auto-sync with backend/models/schemas.py when adding fields
 
 export interface CaseInput {
-/** Clinical case input fields — all optional for partial submissions. */
   patient_age: string;
   patient_sex: string;
   chief_complaint: string;
@@ -27,7 +25,6 @@ export interface CaseInput {
 }
 
 export const emptyCaseInput: CaseInput = {
-/** Default empty form state — every field starts blank. */
   patient_age: '',
   patient_sex: '',
   chief_complaint: '',
@@ -63,13 +60,13 @@ export interface ClinicalPhotos {
 }
 
 export const clinicalPhotoFields: { key: keyof ClinicalPhotos; label: string; accept: string; group?: string }[] = [
-  { key: 'extraoral_smile', label: '1. Extraoral photograph with smile', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw' },
-  { key: 'intraoral_cheek_retracted', label: '2. Intraoral photograph with cheek retracted', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw' },
-  { key: 'maxillary_arch', label: '3. Maxillary arch photograph', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw' },
-  { key: 'mandibular_arch', label: '4. Mandibular arch photograph', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw' },
-  { key: 'occlusion_left_lateral', label: '5a. Occlusion — Left lateral', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw', group: 'Photograph in occlusion' },
-  { key: 'occlusion_right_lateral', label: '5b. Occlusion — Right lateral', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw', group: 'Photograph in occlusion' },
-  { key: 'occlusion_frontal', label: '5c. Occlusion — Frontal view', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw', group: 'Photograph in occlusion' },
+  { key: 'extraoral_smile', label: '1. Extraoral photograph with smile', accept: 'image/*' },
+  { key: 'intraoral_cheek_retracted', label: '2. Intraoral photograph with cheek retracted', accept: 'image/*' },
+  { key: 'maxillary_arch', label: '3. Maxillary arch photograph', accept: 'image/*' },
+  { key: 'mandibular_arch', label: '4. Mandibular arch photograph', accept: 'image/*' },
+  { key: 'occlusion_left_lateral', label: '5a. Occlusion — Left lateral', accept: 'image/*', group: 'Photograph in occlusion' },
+  { key: 'occlusion_right_lateral', label: '5b. Occlusion — Right lateral', accept: 'image/*', group: 'Photograph in occlusion' },
+  { key: 'occlusion_frontal', label: '5c. Occlusion — Frontal view', accept: 'image/*', group: 'Photograph in occlusion' },
   { key: 'cbct_dicom', label: '6. CBCT (DICOM file) for implant cases', accept: '.dcm,.dicom,application/dicom' },
 ];
 
@@ -151,9 +148,16 @@ export interface ExternalReference {
   why_it_matters: string;
 }
 
+export interface ConflictOrUpdate {
+  older_pdf_position: string;
+  newer_understanding: string;
+  clinical_impact: string;
+}
+
 export interface EvidenceBreakdown {
   pdf_references: PdfReference[];
   external_references: ExternalReference[];
+  conflicts_or_updates: ConflictOrUpdate[];
 }
 
 export interface TreatmentResponse {
