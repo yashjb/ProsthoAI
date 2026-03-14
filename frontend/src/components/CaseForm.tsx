@@ -12,6 +12,7 @@ interface Props {
 }
 
 interface FieldDef {
+/** Describes a single input field within a form section. */
   key: keyof CaseInput;
   label: string;
   placeholder: string;
