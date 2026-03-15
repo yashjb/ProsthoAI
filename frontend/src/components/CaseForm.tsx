@@ -20,6 +20,7 @@ interface FieldDef {
 }
 
 const SECTIONS: { title: string; fields: FieldDef[] }[] = [
+// Section order follows standard prosthodontic case presentation flow
   {
     title: 'Patient Demographics',
     fields: [
