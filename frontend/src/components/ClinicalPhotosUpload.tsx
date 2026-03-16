@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+// Handles JPEG, PNG, and RAW camera formats (DNG, CR2, NEF, etc.)
 import { Camera, X, FileImage } from 'lucide-react';
 import type { ClinicalPhotos } from '../types';
 import { clinicalPhotoFields } from '../types';
