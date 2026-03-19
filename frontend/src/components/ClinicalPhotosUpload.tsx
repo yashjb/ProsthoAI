@@ -9,6 +9,7 @@ const RAW_EXTENSIONS = new Set(['.dng', '.cr2', '.cr3', '.nef', '.arw', '.orf', 
 // Must stay in sync with backend RAW_EXTENSIONS in image_processor.py
 
 function isRawFile(file: File): boolean {
+/** Check whether the given File has a RAW camera format extension. */
   const ext = '.' + file.name.split('.').pop()?.toLowerCase();
   return RAW_EXTENSIONS.has(ext);
 }
