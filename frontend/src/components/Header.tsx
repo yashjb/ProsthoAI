@@ -1,4 +1,5 @@
 import { Moon, Sun, Stethoscope } from 'lucide-react';
+// Sticky header with dark-mode toggle and brand identity
 
 interface Props {
   dark: boolean;
