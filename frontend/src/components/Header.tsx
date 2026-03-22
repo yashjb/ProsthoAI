@@ -8,6 +8,7 @@ interface Props {
 }
 
 export default function Header({ dark, onToggle }: Props) {
+  // Backdrop blur ensures readability when content scrolls underneath
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
