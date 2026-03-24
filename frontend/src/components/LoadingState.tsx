@@ -1,5 +1,4 @@
 import { Loader2, Brain, FileSearch, Stethoscope } from 'lucide-react';
-// Animated progress indicator shown during AI analysis
 
 const steps = [
   { icon: FileSearch, text: 'Extracting reference material…' },

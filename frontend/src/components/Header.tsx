@@ -1,14 +1,11 @@
 import { Moon, Sun, Stethoscope } from 'lucide-react';
-// Sticky header with dark-mode toggle and brand identity
 
 interface Props {
-/** Props for the app header with dark-mode toggle. */
   dark: boolean;
   onToggle: () => void;
 }
 
 export default function Header({ dark, onToggle }: Props) {
-  // Backdrop blur ensures readability when content scrolls underneath
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -18,7 +15,7 @@ export default function Header({ dark, onToggle }: Props) {
           </div>
           <div>
             <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
-              Prosthetic Intelligence
+              ProsthoAI
             </h1>
             <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-medium -mt-0.5">
               Treatment Planning Assistant
