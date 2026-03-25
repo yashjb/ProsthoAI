@@ -1,6 +1,8 @@
 import { Loader2, Brain, FileSearch, Stethoscope } from 'lucide-react';
+// Animated progress indicator shown during AI analysis
 
 const steps = [
+// Steps are displayed in sequence with staggered animation delays
   { icon: FileSearch, text: 'Extracting reference material…' },
   { icon: Brain, text: 'Analyzing clinical data…' },
   { icon: Stethoscope, text: 'Generating treatment plan…' },

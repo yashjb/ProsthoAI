@@ -1,4 +1,5 @@
 """Validate and coerce the raw OpenAI JSON into TreatmentResponse."""
+# Applies safe defaults and ensures disclaimer is always present
 
 from __future__ import annotations
 
@@ -6,8 +7,10 @@ import json
 import logging
 
 from models.schemas import TreatmentResponse
+# TreatmentResponse schema enforces required fields at parse time
 
 logger = logging.getLogger(__name__)
+# Invalid JSON is caught and converted into a fallback response
 
 _DEFAULT_DISCLAIMER = (
     "[AI-GENERATED - NOT A SUBSTITUTE FOR PROFESSIONAL CLINICAL JUDGMENT] "

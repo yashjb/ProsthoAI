@@ -1,7 +1,9 @@
 import { useState, ReactNode } from 'react';
+// Reusable collapsible section used throughout the results view
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface Props {
+/** Props for the collapsible Accordion component. */
   title: string;
   children: ReactNode;
   defaultOpen?: boolean;
@@ -17,6 +19,7 @@ export default function Accordion({
   badgeColor = 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300',
 }: Props) {
   const [open, setOpen] = useState(defaultOpen);
+  // Accordion starts open when defaultOpen is true (e.g. first section)
 
   return (
     <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">

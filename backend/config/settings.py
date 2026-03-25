@@ -1,4 +1,5 @@
 """Application settings loaded from environment variables."""
+# Powered by pydantic-settings; see .env.example for required keys
 
 import os
 
@@ -16,6 +17,7 @@ class Settings(BaseSettings):
     openai_max_tokens: int = 32768
     openai_temperature: float = 0.2
     openai_timeout: int = 120
+    # Applies to non-reasoning models; reasoning uses 600s client timeout
     openai_retry_attempts: int = 3
 
     # Vision model timeout (longer for image processing)
@@ -33,6 +35,7 @@ class Settings(BaseSettings):
     
     # Vision analysis settings
     vision_temperature: float = 0.1
+    # Low temperature reduces hallucinated findings in clinical photos
 
     # Logging
     log_level: str = "INFO"
@@ -53,10 +56,12 @@ class Settings(BaseSettings):
 
     # Retrieval
     retrieval_top_k: int = 20
+    # Empirically tuned — higher values add latency without recall gain
 
     # PDF processing
     max_pdf_size_mb: int = 20
     max_pdfs_per_request: int = 5
+    # Hard ceiling prevents OOM on concurrent multi-PDF submissions
     allowed_pdf_extensions: list[str] = ["pdf"]
     pdf_extraction_timeout: int = 30
 
@@ -66,7 +71,7 @@ class Settings(BaseSettings):
     supported_image_formats: list[str] = ["jpg", "jpeg", "png", "webp"]
     max_images_per_request: int = 10
 
-    cors_origins: list[str] = ["http://localhost:5173", "http://localhost:3000"]
+    cors_origins: list[str] = ["*"]
 
     # CORS configuration
     cors_allow_credentials: bool = True

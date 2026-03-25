@@ -17,8 +17,10 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from config.settings import settings
+# All Parquet I/O is synchronous — async wrappers added at route layer
 
 logger = logging.getLogger(__name__)
+# Cosine similarity search is O(n) over all chunks — fine for <50k
 
 
 def _get_parquet_dir() -> str:
@@ -30,10 +32,12 @@ def _chunks_path() -> str:
 
 
 def _chunks_text_path() -> str:
+    """Path to the text-only chunk Parquet (no embeddings)."""
     return os.path.join(_get_parquet_dir(), "chunks_text.parquet")
 
 
 def _meta_path() -> str:
+    """Path to the Parquet metadata file (ingestion fingerprints)."""
     return os.path.join(_get_parquet_dir(), "meta.parquet")
 
 
