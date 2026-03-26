@@ -9,6 +9,7 @@ const steps = [
 ];
 
 export default function LoadingState() {
+  // Renders a centered spinner with three pulsing step indicators
   return (
     <div className="flex flex-col items-center justify-center py-20 space-y-8">
       <div className="relative">
