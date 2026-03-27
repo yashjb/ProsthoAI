@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+// Drag-and-drop PDF upload with 5-file limit
 import { Upload, X, FileText } from 'lucide-react';
 
 interface Props {
