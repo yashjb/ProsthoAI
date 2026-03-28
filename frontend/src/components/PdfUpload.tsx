@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from 'react';
 import { Upload, X, FileText } from 'lucide-react';
 
 interface Props {
+/** Props for the drag-and-drop PDF upload component. */
   files: File[];
   onChange: (files: File[]) => void;
 }
