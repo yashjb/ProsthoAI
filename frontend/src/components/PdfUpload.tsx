@@ -11,6 +11,7 @@ interface Props {
 export default function PdfUpload({ files, onChange }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
+  // Visual feedback: border highlight when user drags files over zone
 
   const addFiles = useCallback(
     (incoming: FileList | null) => {
