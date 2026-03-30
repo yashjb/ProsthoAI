@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import type { TreatmentResponse, TreatmentStep } from '../types';
 import Accordion from './Accordion';
+// Renders the full AI treatment plan in collapsible sections
 import { useState } from 'react';
 
 interface Props {
