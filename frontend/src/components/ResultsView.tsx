@@ -24,6 +24,7 @@ import type { TreatmentResponse, TreatmentStep } from '../types';
 import Accordion from './Accordion';
 // Renders the full AI treatment plan in collapsible sections
 import { useState } from 'react';
+// Clipboard copy state tracked per-section for visual feedback
 
 interface Props {
   data: TreatmentResponse;
