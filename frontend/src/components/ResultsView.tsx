@@ -32,6 +32,7 @@ interface Props {
 }
 
 function ListItems({ items }: { items: string[] }) {
+/** Render a bulleted list of clinical findings or recommendations. */
   if (!items.length) return <p className="text-sm text-slate-400 italic">None identified.</p>;
   return (
     <ul className="space-y-1.5">
