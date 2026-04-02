@@ -22,9 +22,7 @@ import {
 } from 'lucide-react';
 import type { TreatmentResponse, TreatmentStep } from '../types';
 import Accordion from './Accordion';
-// Renders the full AI treatment plan in collapsible sections
 import { useState } from 'react';
-// Clipboard copy state tracked per-section for visual feedback
 
 interface Props {
   data: TreatmentResponse;
@@ -32,7 +30,6 @@ interface Props {
 }
 
 function ListItems({ items }: { items: string[] }) {
-/** Render a bulleted list of clinical findings or recommendations. */
   if (!items.length) return <p className="text-sm text-slate-400 italic">None identified.</p>;
   return (
     <ul className="space-y-1.5">
@@ -449,6 +446,28 @@ export default function ResultsView({ data, onBack }: Props) {
                   <p className="text-xs font-semibold text-green-700 dark:text-green-400 mb-1">{ref.source}</p>
                   <p className="text-sm text-slate-700 dark:text-slate-300">{ref.summary}</p>
                   <p className="text-xs text-slate-500 mt-1">Why it matters: {ref.why_it_matters}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Conflicts */}
+        {data.evidence_breakdown?.conflicts_or_updates?.length > 0 && (
+          <div>
+            <h3 className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-3 uppercase tracking-wide">Conflicts / Updates</h3>
+            <div className="space-y-3">
+              {data.evidence_breakdown.conflicts_or_updates.map((c, i) => (
+                <div key={i} className="rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 space-y-1">
+                  <p className="text-sm text-slate-700 dark:text-slate-300">
+                    <span className="font-semibold text-amber-700 dark:text-amber-400">Older (PDF):</span>{' '}
+                    {c.older_pdf_position}
+                  </p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300">
+                    <span className="font-semibold text-green-700 dark:text-green-400">Newer understanding:</span>{' '}
+                    {c.newer_understanding}
+                  </p>
+                  <p className="text-xs text-slate-500">Clinical impact: {c.clinical_impact}</p>
                 </div>
               ))}
             </div>

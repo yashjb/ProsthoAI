@@ -1,18 +1,14 @@
 """Lightweight in-memory retriever — ranks chunks by keyword relevance."""
-# Keyword-overlap scoring — no embeddings required for ad-hoc queries
 
 from __future__ import annotations
 
 import re
 import logging
 from collections import Counter
-# Counter provides O(1) frequency lookup for TF-overlap scoring
 
 from config.settings import settings
-# top_k defaults to settings.max_context_chunks (currently 20)
 
 logger = logging.getLogger(__name__)
-# Stop-word list covers English determiners, prepositions, and copulas
 
 _STOP_WORDS = frozenset({
     "the", "a", "an", "in", "on", "of", "and", "or", "is", "are",

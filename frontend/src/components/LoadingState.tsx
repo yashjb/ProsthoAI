@@ -1,15 +1,12 @@
 import { Loader2, Brain, FileSearch, Stethoscope } from 'lucide-react';
-// Animated progress indicator shown during AI analysis
 
 const steps = [
-// Steps are displayed in sequence with staggered animation delays
   { icon: FileSearch, text: 'Extracting reference material…' },
   { icon: Brain, text: 'Analyzing clinical data…' },
   { icon: Stethoscope, text: 'Generating treatment plan…' },
 ];
 
 export default function LoadingState() {
-  // Renders a centered spinner with three pulsing step indicators
   return (
     <div className="flex flex-col items-center justify-center py-20 space-y-8">
       <div className="relative">

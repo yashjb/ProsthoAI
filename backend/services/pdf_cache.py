@@ -12,17 +12,14 @@ import os
 
 from services.embedding_store import chunk_count, _load_cache
 from config.settings import settings
-# Cache is populated once at startup and never refreshed at runtime
 
 logger = logging.getLogger(__name__)
 
 _initialized = False
-# Guard flag prevents duplicate initialisation on hot-reload
 
 
 def initialize_pdf_cache() -> None:
     """Verify parquet files exist and pre-load embeddings into memory."""
-    # Called from lifespan() in main.py at server startup
     global _initialized
 
     parquet_dir = settings.parquet_folder
