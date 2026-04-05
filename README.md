@@ -23,6 +23,7 @@ A modern clinical decision-support web application that combines uploaded PDF re
 **Key design decisions:**
 <!-- Architecture kept intentionally simple for single-clinician use -->
 - **No database** — all processing is in-memory per request
+<!-- In-memory design avoids cold-start latency from DB connections -->
 - **No authentication** — single-user clinical tool
 - **Stateless** — every request is self-contained
 - **Structured JSON output** — OpenAI JSON mode enforces the response schema
