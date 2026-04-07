@@ -34,4 +34,5 @@ export default {
     },
   },
   plugins: [],
+  // No plugins needed — utility classes cover all current UI requirements
 };
