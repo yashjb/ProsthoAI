@@ -1,18 +1,15 @@
 import { useState } from 'react';
-// Multi-section clinical input form with photo upload support
 import { Send, Loader2 } from 'lucide-react';
 import type { CaseInput, ClinicalPhotos } from '../types';
 import { emptyCaseInput } from '../types';
 import ClinicalPhotosUpload from './ClinicalPhotosUpload';
 
 interface Props {
-/** Props for the case input form component. */
   onSubmit: (caseData: CaseInput, photos: ClinicalPhotos) => void;
   loading: boolean;
 }
 
 interface FieldDef {
-/** Describes a single input field within a form section. */
   key: keyof CaseInput;
   label: string;
   placeholder: string;
@@ -20,7 +17,6 @@ interface FieldDef {
 }
 
 const SECTIONS: { title: string; fields: FieldDef[] }[] = [
-// Section order follows standard prosthodontic case presentation flow
   {
     title: 'Patient Demographics',
     fields: [
@@ -130,6 +126,12 @@ const SECTIONS: { title: string; fields: FieldDef[] }[] = [
         label: 'Radiographic Findings',
         placeholder: 'OPG, CBCT, periapical findings…',
         rows: 3,
+      },
+      {
+        key: 'provisional_diagnosis',
+        label: 'Provisional Diagnosis',
+        placeholder: 'Working diagnosis…',
+        rows: 2,
       },
       {
         key: 'proposed_treatment',
