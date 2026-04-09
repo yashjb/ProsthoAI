@@ -1,4 +1,5 @@
 """Pydantic schemas for request/response validation."""
+# Mirrors the TypeScript interfaces in frontend/src/types.ts
 
 from __future__ import annotations
 
@@ -9,6 +10,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class CaseInput(BaseModel):
     """Clinical case details from the input form."""
+    # All fields default to empty string — partial submissions are valid
 
     patient_age: str = ""
     patient_sex: str = ""
@@ -50,6 +52,7 @@ class CaseInput(BaseModel):
 
 class DiagnosisClassification(BaseModel):
     """Specific diagnosis with classification (e.g. Turner & Missirlian)."""
+    # Maps to prosthodontic classification frameworks
     classification_system: str = ""
     specific_class: str = ""
     definitive_diagnosis: str = ""
@@ -121,16 +124,9 @@ class ExternalReference(BaseModel):
     why_it_matters: str = ""
 
 
-class ConflictOrUpdate(BaseModel):
-    older_pdf_position: str = ""
-    newer_understanding: str = ""
-    clinical_impact: str = ""
-
-
 class EvidenceBreakdown(BaseModel):
     pdf_references: list[PdfReference] = []
     external_references: list[ExternalReference] = []
-    conflicts_or_updates: list[ConflictOrUpdate] = []
 
 
 class MaterialChoice(BaseModel):
