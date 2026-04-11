@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Custom properties below override Tailwind defaults for brand theming */
 
 :root {
   --bg-gradient-from: #f8fafc;
