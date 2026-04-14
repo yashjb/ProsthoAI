@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-// Custom color palette: primary (blue) and medical (green) scales
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
@@ -34,5 +33,4 @@ export default {
     },
   },
   plugins: [],
-  // No plugins needed — utility classes cover all current UI requirements
 };

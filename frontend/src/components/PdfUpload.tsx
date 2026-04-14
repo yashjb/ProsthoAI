@@ -1,9 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
-// Drag-and-drop PDF upload with 5-file limit
 import { Upload, X, FileText } from 'lucide-react';
 
 interface Props {
-/** Props for the drag-and-drop PDF upload component. */
   files: File[];
   onChange: (files: File[]) => void;
 }
@@ -11,7 +9,6 @@ interface Props {
 export default function PdfUpload({ files, onChange }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
-  // Visual feedback: border highlight when user drags files over zone
 
   const addFiles = useCallback(
     (incoming: FileList | null) => {

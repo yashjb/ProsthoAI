@@ -1,15 +1,12 @@
 import type { APIResponse, CaseInput, ClinicalPhotos } from './types';
 
-const API_BASE = import.meta.env.VITE_API_BASE || '/api';
-// Falls back to relative /api path for Vite dev-server proxy
+const API_BASE = '/api';
 
 export async function analyzeCase(
-/** Submit case data and optional clinical photos for AI analysis. */
   caseData: CaseInput,
   photos: ClinicalPhotos = {},
 ): Promise<APIResponse> {
   const formData = new FormData();
-  // Multipart encoding required for mixed JSON + binary photo upload
   formData.append('case_data', JSON.stringify(caseData));
 
   // Append clinical photographs

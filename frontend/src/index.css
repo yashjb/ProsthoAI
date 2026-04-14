@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* Custom properties below override Tailwind defaults for brand theming */
 
 :root {
   --bg-gradient-from: #f8fafc;
@@ -18,7 +17,6 @@ body {
 }
 
 /* custom scrollbar */
-/* Thin scrollbar styling — WebKit only, Firefox uses scrollbar-width */
 ::-webkit-scrollbar {
   width: 6px;
 }
