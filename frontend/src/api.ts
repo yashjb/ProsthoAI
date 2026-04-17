@@ -2,8 +2,11 @@ import type { APIResponse, CaseInput, ClinicalPhotos, ShadeMatchingResponse } fr
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
-/** Max upload size in bytes (4 MB, safely under Vercel's 4.5 MB limit). */
-const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
+/**
+ * Vercel serverless body limit is 4.5 MB. We reserve ~100 KB for the JSON
+ * case_data field + multipart overhead, leaving ~4.4 MB for images.
+ */
+const VERCEL_BODY_LIMIT = 4.4 * 1024 * 1024;
 
 const RAW_EXTENSIONS = new Set(['.dng', '.cr2', '.cr3', '.nef', '.arw', '.orf', '.raf', '.rw2']);
 
@@ -43,8 +46,28 @@ async function extractJpegFromRaw(file: File): Promise<Blob | null> {
 
 /**
  * Resize a browser-readable image via canvas, returning a JPEG blob.
+ * Tries progressively smaller dimensions / quality to hit targetBytes.
  */
-function resizeImageBlob(blob: Blob, maxDim = 2048, quality = 0.85): Promise<Blob> {
+async function resizeImageBlob(
+  blob: Blob,
+  maxDim = 2048,
+  quality = 0.82,
+  targetBytes = VERCEL_BODY_LIMIT,
+): Promise<Blob> {
+  let result = await _canvasToJpeg(blob, maxDim, quality);
+  // If already within budget, return immediately
+  if (result.size <= targetBytes) return result;
+  // Reduce until within budget
+  for (const dim of [1600, 1200, 800]) {
+    for (const q of [0.7, 0.5]) {
+      result = await _canvasToJpeg(blob, dim, q);
+      if (result.size <= targetBytes) return result;
+    }
+  }
+  return result; // best effort
+}
+
+function _canvasToJpeg(blob: Blob, maxDim: number, quality: number): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(blob);
     const img = new Image();
@@ -72,25 +95,23 @@ function resizeImageBlob(blob: Blob, maxDim = 2048, quality = 0.85): Promise<Blo
 }
 
 /**
- * Compress an image file to stay under Vercel's body size limit.
- * - RAW files: extract embedded JPEG preview.
- * - Large images: resize/recompress via canvas.
+ * Compress an image file to fit within a per-file byte budget.
+ * @param budgetBytes  max bytes this single file should occupy
  */
-async function compressForUpload(file: File): Promise<Blob> {
+async function compressForUpload(file: File, budgetBytes = VERCEL_BODY_LIMIT): Promise<Blob> {
   // RAW files: extract the embedded JPEG, then always run through canvas
   // to apply EXIF orientation (the embedded preview is often physically inverted).
   if (isRawFile(file.name)) {
     const jpeg = await extractJpegFromRaw(file);
-    if (jpeg) return resizeImageBlob(jpeg);
-    // Fallback: send original (backend will try to convert)
+    if (jpeg) return resizeImageBlob(jpeg, 2048, 0.82, budgetBytes);
     return file;
   }
 
   // Regular image small enough already
-  if (file.size <= MAX_UPLOAD_BYTES) return file;
+  if (file.size <= budgetBytes) return file;
 
   // Compress via canvas
-  return resizeImageBlob(file);
+  return resizeImageBlob(file, 2048, 0.82, budgetBytes);
 }
 
 export async function analyzeCase(
@@ -99,18 +120,26 @@ export async function analyzeCase(
 ): Promise<APIResponse> {
   const formData = new FormData();
   formData.append('case_data', JSON.stringify(caseData));
-
+  // Count total photos to compute per-file byte budget
+  let photoCount = 0;
+  for (const value of Object.values(photos)) {
+    if (!value) continue;
+    photoCount += Array.isArray(value) ? value.length : 1;
+  }
+  const perFileBudget = photoCount > 0
+    ? Math.floor(VERCEL_BODY_LIMIT / photoCount)
+    : VERCEL_BODY_LIMIT;
   // Append clinical photographs (compressed to stay under Vercel body limit)
   for (const [key, value] of Object.entries(photos)) {
     if (!value) continue;
     if (Array.isArray(value)) {
       for (const file of value) {
-        const blob = await compressForUpload(file);
+        const blob = await compressForUpload(file, perFileBudget);
         const name = blob !== file ? file.name.replace(/\.[^.]+$/, '.jpg') : file.name;
         formData.append(`photo_${key}`, blob, name);
       }
     } else {
-      const blob = await compressForUpload(value);
+      const blob = await compressForUpload(value, perFileBudget);
       const name = blob !== value ? value.name.replace(/\.[^.]+$/, '.jpg') : value.name;
       formData.append(`photo_${key}`, blob, name);
     }
