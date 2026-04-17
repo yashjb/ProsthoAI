@@ -39,11 +39,15 @@ export default function App() {
   }, [dark]);
 
   const [submitting, setSubmitting] = useState(false);
+  const [loadingFinished, setLoadingFinished] = useState(false);
+  const [pendingResult, setPendingResult] = useState<{ data: TreatmentResponse } | null>(null);
 
   const handleSubmit = async (caseData: CaseInput, photos: ClinicalPhotos) => {
     setView('loading');
     setSubmitting(true);
     setError(null);
+    setLoadingFinished(false);
+    setPendingResult(null);
     setLastCaseInput(caseData);
 
     // Convert photos to base64 data URLs for saving later
@@ -68,7 +72,9 @@ export default function App() {
       const res = await analyzeCase(caseData, photos);
       if (res.success && res.data) {
         setResult(res.data);
-        setView('results');
+        setPendingResult({ data: res.data });
+        setLoadingFinished(true);
+        // View transition happens via LoadingState's onDone callback
       } else {
         setError(res.error || 'Unknown error from the server.');
         setView('form');
@@ -78,6 +84,14 @@ export default function App() {
       setView('form');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleLoadingDone = () => {
+    if (pendingResult) {
+      setView('results');
+      setPendingResult(null);
+      setLoadingFinished(false);
     }
   };
 
@@ -141,7 +155,7 @@ export default function App() {
         <div style={{ display: view === 'form' ? 'block' : 'none' }}>
           <CaseForm onSubmit={handleSubmit} loading={submitting} />
         </div>
-        {view === 'loading' && <LoadingState />}
+        {view === 'loading' && <LoadingState finished={loadingFinished} onDone={handleLoadingDone} />}
         {view === 'results' && result && (
           <ResultsView
             data={result}
