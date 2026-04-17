@@ -10,8 +10,15 @@ export async function analyzeCase(
   formData.append('case_data', JSON.stringify(caseData));
 
   // Append clinical photographs
-  for (const [key, file] of Object.entries(photos)) {
-    if (file) formData.append(`photo_${key}`, file);
+  for (const [key, value] of Object.entries(photos)) {
+    if (!value) continue;
+    if (Array.isArray(value)) {
+      for (const file of value) {
+        formData.append(`photo_${key}`, file);
+      }
+    } else {
+      formData.append(`photo_${key}`, value);
+    }
   }
 
   const res = await fetch(`${API_BASE}/analyze`, {

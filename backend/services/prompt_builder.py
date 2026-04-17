@@ -31,7 +31,7 @@ ABSOLUTE RULES (VIOLATIONS WILL MAKE OUTPUT USELESS)
 
 6. NO GENERIC THEORY — Do not explain background concepts unless directly needed to justify a decision for this case. If the patient has generalized attrition, do NOT explain what attrition is — instead classify it, quantify it, and plan for it.
 
-7. PHOTO ANALYSIS — If clinical photographs are provided, describe specific observations from each photograph. Do not say "photographs show attrition" — say "frontal view shows generalized loss of tooth structure in the anterior sextants with exposed dentin on the incisal edges of 11, 21, 31, 41; the maxillary arch photo reveals worn palatal concavities on 13–23 consistent with Category I/II Turner & Missirlian classification."
+7. PHOTO ANALYSIS — If clinical photographs are provided, describe specific observations from each photograph. Do not say "photographs show attrition" — say "frontal view shows generalized loss of tooth structure in the anterior sextants with exposed dentin on the incisal edges of 11, 21, 31, 41; the maxillary arch photo reveals worn palatal concavities on 13–23 consistent with Category I/II/III Turner & Missirlian classification."
 
 8. DISAMBIGUATION — When the PDF excerpts contain multiple classification systems or approaches, you MUST pick the one that fits this case and explicitly state why the others do not fit.
 

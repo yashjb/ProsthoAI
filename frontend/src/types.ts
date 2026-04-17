@@ -56,10 +56,10 @@ export interface ClinicalPhotos {
   occlusion_left_lateral?: File;
   occlusion_right_lateral?: File;
   occlusion_frontal?: File;
-  cbct_dicom?: File;
+  radiographic_record?: File[];
 }
 
-export const clinicalPhotoFields: { key: keyof ClinicalPhotos; label: string; accept: string; group?: string }[] = [
+export const clinicalPhotoFields: { key: keyof ClinicalPhotos; label: string; accept: string; group?: string; multiple?: boolean }[] = [
   { key: 'extraoral_smile', label: '1. Extraoral photograph with smile', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw' },
   { key: 'intraoral_cheek_retracted', label: '2. Intraoral photograph with cheek retracted', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw' },
   { key: 'maxillary_arch', label: '3. Maxillary arch photograph', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw' },
@@ -67,7 +67,7 @@ export const clinicalPhotoFields: { key: keyof ClinicalPhotos; label: string; ac
   { key: 'occlusion_left_lateral', label: '5a. Occlusion — Left lateral', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw', group: 'Photograph in occlusion' },
   { key: 'occlusion_right_lateral', label: '5b. Occlusion — Right lateral', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw', group: 'Photograph in occlusion' },
   { key: 'occlusion_frontal', label: '5c. Occlusion — Frontal view', accept: 'image/*,.dng,.cr2,.cr3,.nef,.arw', group: 'Photograph in occlusion' },
-  { key: 'cbct_dicom', label: '6. CBCT (DICOM file) for implant cases', accept: '.dcm,.dicom,application/dicom' },
+  { key: 'radiographic_record', label: '6. Radiographic record (CBCT/OPG/Lateral Ceph)', accept: '.dcm,.dicom,application/dicom,image/jpeg,image/png,.jpg,.jpeg,.png,.dng,.cr2,.cr3,.nef,.arw', multiple: true },
 ];
 
 export interface TreatmentStep {

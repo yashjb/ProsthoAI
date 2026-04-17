@@ -27,7 +27,6 @@ _PHOTO_FIELDS: list[tuple[str, str]] = [
     ("photo_occlusion_left_lateral", "Occlusion — Left lateral"),
     ("photo_occlusion_right_lateral", "Occlusion — Right lateral"),
     ("photo_occlusion_frontal", "Occlusion — Frontal view"),
-    ("photo_cbct_dicom", "CBCT scan"),
 ]
 
 
@@ -41,7 +40,7 @@ async def analyze_case(
     photo_occlusion_left_lateral: UploadFile | None = File(default=None),
     photo_occlusion_right_lateral: UploadFile | None = File(default=None),
     photo_occlusion_frontal: UploadFile | None = File(default=None),
-    photo_cbct_dicom: UploadFile | None = File(default=None),
+    photo_radiographic_record: list[UploadFile] = File(default=[]),
 ):
     """Accept case details + optional clinical photographs and return a
     structured treatment-planning response.
@@ -69,7 +68,6 @@ async def analyze_case(
         "photo_occlusion_left_lateral": photo_occlusion_left_lateral,
         "photo_occlusion_right_lateral": photo_occlusion_right_lateral,
         "photo_occlusion_frontal": photo_occlusion_frontal,
-        "photo_cbct_dicom": photo_cbct_dicom,
     }
 
     image_parts: list[dict[str, Any]] = []
@@ -81,6 +79,20 @@ async def analyze_case(
             raw_bytes = await upload.read()
             part = process_image_for_openai(raw_bytes, upload.filename)
             if part:
+                image_parts.append({"label": label, "content": part})
+                logger.info("  Image OK: %s (%s)", label, upload.filename)
+        except Exception as exc:
+            logger.warning("  Image skip: %s — %s", upload.filename, exc)
+
+    # Process multiple radiographic record files
+    for idx, upload in enumerate(photo_radiographic_record):
+        if upload.filename is None:
+            continue
+        try:
+            raw_bytes = await upload.read()
+            part = process_image_for_openai(raw_bytes, upload.filename)
+            if part:
+                label = f"Radiographic record (CBCT/OPG/Lateral Ceph) #{idx + 1}"
                 image_parts.append({"label": label, "content": part})
                 logger.info("  Image OK: %s (%s)", label, upload.filename)
         except Exception as exc:
