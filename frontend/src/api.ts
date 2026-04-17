@@ -100,15 +100,19 @@ export async function analyzeCase(
   const formData = new FormData();
   formData.append('case_data', JSON.stringify(caseData));
 
-  // Append clinical photographs
+  // Append clinical photographs (compressed to stay under Vercel body limit)
   for (const [key, value] of Object.entries(photos)) {
     if (!value) continue;
     if (Array.isArray(value)) {
       for (const file of value) {
-        formData.append(`photo_${key}`, file);
+        const blob = await compressForUpload(file);
+        const name = blob !== file ? file.name.replace(/\.[^.]+$/, '.jpg') : file.name;
+        formData.append(`photo_${key}`, blob, name);
       }
     } else {
-      formData.append(`photo_${key}`, value);
+      const blob = await compressForUpload(value);
+      const name = blob !== value ? value.name.replace(/\.[^.]+$/, '.jpg') : value.name;
+      formData.append(`photo_${key}`, blob, name);
     }
   }
 
