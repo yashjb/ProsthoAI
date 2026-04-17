@@ -130,8 +130,12 @@ export async function analyzeCase(
 export async function analyzeShade(file: File): Promise<ShadeMatchingResponse> {
   const formData = new FormData();
   const compressed = await compressForUpload(file);
-  // Preserve original filename for the backend
-  formData.append('file', compressed, file.name);
+  // If the file was converted to JPEG, use a .jpg extension so the backend
+  // doesn't try to run rawpy on already-decoded JPEG bytes.
+  const name = compressed !== file
+    ? file.name.replace(/\.[^.]+$/, '.jpg')
+    : file.name;
+  formData.append('file', compressed, name);
 
   const res = await fetch(`${API_BASE}/shade-matching`, {
     method: 'POST',
