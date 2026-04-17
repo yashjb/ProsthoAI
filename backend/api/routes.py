@@ -105,7 +105,6 @@ async def analyze_case(
             None,
             [
                 case.chief_complaint,
-                case.provisional_diagnosis,
                 case.proposed_treatment,
                 case.intraoral_findings,
                 case.missing_teeth,
