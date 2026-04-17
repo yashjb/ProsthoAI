@@ -105,7 +105,7 @@ def process_image_for_openai(
             "type": "image_url",
             "image_url": {
                 "url": f"data:image/jpeg;base64,{b64}",
-                "detail": "high",
+                "detail": "auto",
             },
         }
     except Exception as exc:

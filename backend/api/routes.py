@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
 from typing import Any
@@ -74,32 +75,38 @@ async def analyze_case(
     }
 
     image_parts: list[dict[str, Any]] = []
+
+    # Read all uploads first (async I/O), then process images concurrently
+    _pending: list[tuple[str, str, bytes]] = []  # (label, filename, raw_bytes)
     for field_name, label in _PHOTO_FIELDS:
         upload = uploads_map.get(field_name)
         if upload is None or upload.filename is None:
             continue
-        try:
-            raw_bytes = await upload.read()
-            part = process_image_for_openai(raw_bytes, upload.filename)
-            if part:
-                image_parts.append({"label": label, "content": part})
-                logger.info("  Image OK: %s (%s)", label, upload.filename)
-        except Exception as exc:
-            logger.warning("  Image skip: %s — %s", upload.filename, exc)
+        raw_bytes = await upload.read()
+        _pending.append((label, upload.filename, raw_bytes))
 
-    # Process multiple radiographic record files
     for idx, upload in enumerate(photo_radiographic_record):
         if upload.filename is None:
             continue
+        raw_bytes = await upload.read()
+        label = f"Radiographic record (CBCT/OPG/Lateral Ceph) #{idx + 1}"
+        _pending.append((label, upload.filename or "image", raw_bytes))
+
+    # Process images in parallel (CPU-bound DNG conversion benefits from threads)
+    loop = asyncio.get_running_loop()
+
+    async def _process(label: str, filename: str, raw_bytes: bytes) -> dict[str, Any] | None:
         try:
-            raw_bytes = await upload.read()
-            part = process_image_for_openai(raw_bytes, upload.filename)
+            part = await loop.run_in_executor(None, process_image_for_openai, raw_bytes, filename)
             if part:
-                label = f"Radiographic record (CBCT/OPG/Lateral Ceph) #{idx + 1}"
-                image_parts.append({"label": label, "content": part})
-                logger.info("  Image OK: %s (%s)", label, upload.filename)
+                logger.info("  Image OK: %s (%s)", label, filename)
+                return {"label": label, "content": part}
         except Exception as exc:
-            logger.warning("  Image skip: %s — %s", upload.filename, exc)
+            logger.warning("  Image skip: %s — %s", filename, exc)
+        return None
+
+    results = await asyncio.gather(*[_process(l, f, b) for l, f, b in _pending])
+    image_parts = [r for r in results if r is not None]
 
     # ── 3. Vision analysis — extract findings from photos ────────────────
     image_findings: str = ""

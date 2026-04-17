@@ -13,9 +13,9 @@ class Settings(BaseSettings):
 
     openai_api_key: str
     openai_model: str = "gpt-4o"
-    openai_max_tokens: int = 32768
+    openai_max_tokens: int = 16384
     openai_temperature: float = 0.2
-    openai_timeout: int = 120
+    openai_timeout: int = 300
     openai_retry_attempts: int = 3
 
     # Vision model timeout (longer for image processing)
@@ -47,12 +47,12 @@ class Settings(BaseSettings):
     # Chunking
     max_chunk_tokens: int = 600
     chunk_overlap_tokens: int = 100
-    max_context_chunks: int = 20
+    max_context_chunks: int = 12
     min_chunk_tokens: int = 50
     chunk_separator: str = "\n\n"
 
     # Retrieval
-    retrieval_top_k: int = 20
+    retrieval_top_k: int = 12
 
     # PDF processing
     max_pdf_size_mb: int = 20

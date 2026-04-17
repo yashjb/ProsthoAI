@@ -94,6 +94,24 @@ function labelValue(doc: jsPDF, y: number, label: string, value: string): number
   return y;
 }
 
+/** Print a label: value pair where label may be very long.
+ *  Places the value on a new line with indent instead of inline. */
+function labelValueBlock(doc: jsPDF, y: number, label: string, value: string): number {
+  if (!value) return y;
+  y = ensureSpace(doc, y, LINE_H * 3);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(80, 80, 80);
+  const labelLines = doc.splitTextToSize(`${label}:`, CONTENT_W);
+  for (const line of labelLines) {
+    y = ensureSpace(doc, y, LINE_H);
+    doc.text(line, MARGIN, y);
+    y += LINE_H;
+  }
+  y = bodyText(doc, y, value, 10);
+  return y;
+}
+
 /** Print a bullet list. */
 function bulletList(doc: jsPDF, y: number, items: string[]): number {
   doc.setFont('helvetica', 'normal');
@@ -400,14 +418,16 @@ export async function generateTreatmentPlanPDF(
     if (data.evidence_breakdown.pdf_references?.length > 0) {
       y = heading(doc, y, 'PDF References', 3);
       for (const ref of data.evidence_breakdown.pdf_references) {
-        y = labelValue(doc, y, ref.source_title, `"${ref.excerpt_or_page}" — ${ref.relevance}`);
+        y = labelValueBlock(doc, y, ref.source_title, `"${ref.excerpt_or_page}" — ${ref.relevance}`);
+        y += 1;
       }
       y += 2;
     }
     if (data.evidence_breakdown.external_references?.length > 0) {
       y = heading(doc, y, 'External Evidence', 3);
       for (const ref of data.evidence_breakdown.external_references) {
-        y = labelValue(doc, y, ref.source, `${ref.summary} — ${ref.why_it_matters}`);
+        y = labelValueBlock(doc, y, ref.source, `${ref.summary} — ${ref.why_it_matters}`);
+        y += 1;
       }
       y += 2;
     }
