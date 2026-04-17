@@ -1,20 +1,52 @@
-import { Loader2, Brain, FileSearch, Stethoscope } from 'lucide-react';
+import { useEffect } from 'react';
+import { Brain, FileSearch, Stethoscope } from 'lucide-react';
+import { useSimulatedProgress } from '../hooks/useSimulatedProgress';
 
 const steps = [
-  { icon: FileSearch, text: 'Extracting reference material…' },
-  { icon: Brain, text: 'Analyzing clinical data…' },
-  { icon: Stethoscope, text: 'Generating treatment plan…' },
+  { icon: FileSearch, text: 'Extracting reference material…', threshold: 15 },
+  { icon: Brain, text: 'Analyzing clinical data…', threshold: 45 },
+  { icon: Stethoscope, text: 'Generating treatment plan…', threshold: 75 },
 ];
 
-export default function LoadingState() {
+interface Props {
+  /** Signal that the API call has finished. Progress will jump to 100% and call onDone. */
+  finished?: boolean;
+  /** Called after 100% is briefly shown so the parent can switch views. */
+  onDone?: () => void;
+}
+
+export default function LoadingState({ finished, onDone }: Props) {
+  const { progress, complete } = useSimulatedProgress(true);
+
+  useEffect(() => {
+    if (finished) {
+      complete();
+      const t = setTimeout(() => onDone?.(), 400);
+      return () => clearTimeout(t);
+    }
+  }, [finished]);
+
   return (
     <div className="flex flex-col items-center justify-center py-20 space-y-8">
-      <div className="relative">
-        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-2xl shadow-primary-500/40">
-          <Loader2 className="w-8 h-8 text-white animate-spin" />
+      {/* Circular progress */}
+      <div className="relative w-28 h-28">
+        <svg className="w-28 h-28 -rotate-90" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="52" fill="none" className="stroke-slate-200 dark:stroke-slate-700" strokeWidth="8" />
+          <circle
+            cx="60" cy="60" r="52" fill="none"
+            className="stroke-primary-500"
+            strokeWidth="8"
+            strokeLinecap="round"
+            strokeDasharray={2 * Math.PI * 52}
+            strokeDashoffset={2 * Math.PI * 52 * (1 - progress / 100)}
+            style={{ transition: 'stroke-dashoffset 0.3s ease' }}
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">{progress}%</span>
         </div>
-        <div className="absolute -inset-3 rounded-full border-2 border-primary-200 dark:border-primary-800 animate-ping opacity-30" />
       </div>
+
       <div className="text-center space-y-2">
         <h2 className="text-lg font-bold text-slate-900 dark:text-white">
           Processing Your Case
@@ -24,17 +56,34 @@ export default function LoadingState() {
           and current evidence to build your treatment plan.
         </p>
       </div>
-      <div className="space-y-3 w-full max-w-xs">
-        {steps.map(({ icon: Icon, text }, i) => (
+
+      {/* Progress bar */}
+      <div className="w-full max-w-xs">
+        <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
           <div
-            key={i}
-            className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400 animate-pulse"
-            style={{ animationDelay: `${i * 0.5}s` }}
-          >
-            <Icon className="w-4 h-4 text-primary-500" />
-            <span>{text}</span>
-          </div>
-        ))}
+            className="h-full rounded-full bg-gradient-to-r from-primary-500 to-primary-600 transition-all duration-300 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-3 w-full max-w-xs">
+        {steps.map(({ icon: Icon, text, threshold }, i) => {
+          const active = progress >= threshold;
+          return (
+            <div
+              key={i}
+              className={`flex items-center gap-3 text-sm transition-colors duration-300 ${
+                active
+                  ? 'text-slate-800 dark:text-slate-200'
+                  : 'text-slate-400 dark:text-slate-600'
+              }`}
+            >
+              <Icon className={`w-4 h-4 transition-colors duration-300 ${active ? 'text-primary-500' : 'text-slate-300 dark:text-slate-600'}`} />
+              <span>{text}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
