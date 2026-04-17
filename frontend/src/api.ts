@@ -77,11 +77,10 @@ function resizeImageBlob(blob: Blob, maxDim = 2048, quality = 0.85): Promise<Blo
  * - Large images: resize/recompress via canvas.
  */
 async function compressForUpload(file: File): Promise<Blob> {
-  // RAW files: always extract the embedded JPEG
+  // RAW files: extract the embedded JPEG, then always run through canvas
+  // to apply EXIF orientation (the embedded preview is often physically inverted).
   if (isRawFile(file.name)) {
     const jpeg = await extractJpegFromRaw(file);
-    if (jpeg && jpeg.size <= MAX_UPLOAD_BYTES) return jpeg;
-    // If extracted JPEG is still too large, resize it
     if (jpeg) return resizeImageBlob(jpeg);
     // Fallback: send original (backend will try to convert)
     return file;
