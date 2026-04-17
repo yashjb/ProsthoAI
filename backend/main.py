@@ -28,17 +28,17 @@ async def lifespan(app: FastAPI):
     from services.pdf_cache import initialize_pdf_cache
 
     import time as _time; _t0 = _time.monotonic()
-    logger.info("Prosthetic Intelligence %s starting up", __version__)
+    logger.info("Prosthodontic Intelligence %s starting up", __version__)
     initialize_pdf_cache()
     yield
-    logger.info("Prosthetic Intelligence shutting down")
+    logger.info("Prosthodontic Intelligence shutting down")
     # ── Shutdown ─────────────────────────────────────────────────────────
 
 
 app = FastAPI(
-    title="Prosthetic Intelligence — Treatment Planning Assistant",
+    title="Prosthodontic Intelligence — Treatment Planning Assistant",
     version="1.0.0",
-    description="Prosthetic Intelligence: clinical decision-support tool — semantic PDF retrieval and multimodal vision analysis.",
+    description="Prosthodontic Intelligence: clinical decision-support tool — semantic PDF retrieval and multimodal vision analysis.",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     lifespan=lifespan,
