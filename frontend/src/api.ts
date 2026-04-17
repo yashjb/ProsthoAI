@@ -2,6 +2,98 @@ import type { APIResponse, CaseInput, ClinicalPhotos, ShadeMatchingResponse } fr
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
+/** Max upload size in bytes (4 MB, safely under Vercel's 4.5 MB limit). */
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
+
+const RAW_EXTENSIONS = new Set(['.dng', '.cr2', '.cr3', '.nef', '.arw', '.orf', '.raf', '.rw2']);
+
+function isRawFile(name: string): boolean {
+  const ext = '.' + name.split('.').pop()?.toLowerCase();
+  return RAW_EXTENSIONS.has(ext);
+}
+
+/**
+ * Extract the largest embedded JPEG from a RAW/DNG file.
+ */
+async function extractJpegFromRaw(file: File): Promise<Blob | null> {
+  const buffer = await file.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  let bestStart = -1;
+  let bestLength = 0;
+  let currentStart = -1;
+  for (let i = 0; i < bytes.length - 1; i++) {
+    if (bytes[i] === 0xff) {
+      if (bytes[i + 1] === 0xd8) {
+        currentStart = i;
+      } else if (bytes[i + 1] === 0xd9 && currentStart >= 0) {
+        const len = i + 2 - currentStart;
+        if (len > bestLength) {
+          bestStart = currentStart;
+          bestLength = len;
+        }
+        currentStart = -1;
+      }
+    }
+  }
+  if (bestStart >= 0 && bestLength > 1000) {
+    return new Blob([bytes.slice(bestStart, bestStart + bestLength)], { type: 'image/jpeg' });
+  }
+  return null;
+}
+
+/**
+ * Resize a browser-readable image via canvas, returning a JPEG blob.
+ */
+function resizeImageBlob(blob: Blob, maxDim = 2048, quality = 0.85): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        const ratio = Math.min(maxDim / width, maxDim / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error('Canvas compression failed'))),
+        'image/jpeg',
+        quality,
+      );
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Failed to load image')); };
+    img.src = url;
+  });
+}
+
+/**
+ * Compress an image file to stay under Vercel's body size limit.
+ * - RAW files: extract embedded JPEG preview.
+ * - Large images: resize/recompress via canvas.
+ */
+async function compressForUpload(file: File): Promise<Blob> {
+  // RAW files: always extract the embedded JPEG
+  if (isRawFile(file.name)) {
+    const jpeg = await extractJpegFromRaw(file);
+    if (jpeg && jpeg.size <= MAX_UPLOAD_BYTES) return jpeg;
+    // If extracted JPEG is still too large, resize it
+    if (jpeg) return resizeImageBlob(jpeg);
+    // Fallback: send original (backend will try to convert)
+    return file;
+  }
+
+  // Regular image small enough already
+  if (file.size <= MAX_UPLOAD_BYTES) return file;
+
+  // Compress via canvas
+  return resizeImageBlob(file);
+}
+
 export async function analyzeCase(
   caseData: CaseInput,
   photos: ClinicalPhotos = {},
@@ -37,7 +129,9 @@ export async function analyzeCase(
 
 export async function analyzeShade(file: File): Promise<ShadeMatchingResponse> {
   const formData = new FormData();
-  formData.append('file', file);
+  const compressed = await compressForUpload(file);
+  // Preserve original filename for the backend
+  formData.append('file', compressed, file.name);
 
   const res = await fetch(`${API_BASE}/shade-matching`, {
     method: 'POST',
