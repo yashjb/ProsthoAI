@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, Sparkles, Loader2, Image as ImageIcon, ArrowLeft, Download, Check } from 'lucide-react';
 import { analyzeShade } from '../api';
 import { generateShadeMatchingPDF } from '../pdfGenerator';
+import { useSimulatedProgress } from '../hooks/useSimulatedProgress';
 import type { ShadeAnalysis } from '../types';
 
 /** RAW formats browsers cannot natively decode */
@@ -57,6 +58,7 @@ export default function ShadeMatching({ onBack }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { progress, complete: completeProgress } = useSimulatedProgress(isProcessing);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -119,6 +121,9 @@ export default function ShadeMatching({ onBack }: Props) {
     } catch (err: any) {
       setError(err.message || 'Failed to connect to server');
     } finally {
+      completeProgress();
+      // brief delay so the user sees 100% before the loader disappears
+      await new Promise((r) => setTimeout(r, 400));
       setIsProcessing(false);
     }
   };
@@ -237,10 +242,36 @@ export default function ShadeMatching({ onBack }: Props) {
       {/* Processing */}
       {isProcessing && (
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 className="w-14 h-14 text-primary-500 animate-spin mx-auto mb-4" />
-            <p className="text-slate-900 dark:text-white text-lg font-semibold">Analyzing dental shade…</p>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Using AI to match the perfect shade</p>
+          <div className="text-center space-y-6 w-full max-w-xs">
+            {/* Circular progress */}
+            <div className="relative w-28 h-28 mx-auto">
+              <svg className="w-28 h-28 -rotate-90" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="52" fill="none" className="stroke-slate-600" strokeWidth="8" />
+                <circle
+                  cx="60" cy="60" r="52" fill="none"
+                  className="stroke-primary-400"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={2 * Math.PI * 52}
+                  strokeDashoffset={2 * Math.PI * 52 * (1 - progress / 100)}
+                  style={{ transition: 'stroke-dashoffset 0.3s ease' }}
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl font-bold text-primary-400">{progress}%</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-slate-900 dark:text-white text-lg font-semibold">Analyzing dental shade…</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Using AI to match the perfect shade</p>
+            </div>
+            {/* Linear progress bar */}
+            <div className="h-2 rounded-full bg-slate-700 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-primary-400 to-primary-500 transition-all duration-300 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
         </div>
       )}
