@@ -9,7 +9,7 @@ import logging
 import os
 import tempfile
 
-from PIL import Image, ImageOps
+from PIL import Image
 
 from config.settings import settings
 
@@ -85,9 +85,6 @@ def process_image_for_openai(
             img = Image.open(io.BytesIO(file_bytes))
 
         img = _resize_image(img, settings.max_image_dimension)
-
-        # Apply EXIF orientation so the image isn't rotated/flipped
-        img = ImageOps.exif_transpose(img)
 
         if img.mode != "RGB":
             img = img.convert("RGB")
