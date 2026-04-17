@@ -19,14 +19,19 @@ import {
   Target,
   ChevronDown,
   ChevronRight,
+  Download,
+  Check,
 } from 'lucide-react';
-import type { TreatmentResponse, TreatmentStep } from '../types';
+import type { TreatmentResponse, TreatmentStep, CaseInput, ClinicalPhotos } from '../types';
+import { generateTreatmentPlanPDF } from '../pdfGenerator';
 import Accordion from './Accordion';
 import { useState } from 'react';
 
 interface Props {
   data: TreatmentResponse;
   onBack: () => void;
+  caseInput?: CaseInput;
+  photoDataUrls?: Record<string, string>;
 }
 
 function ListItems({ items }: { items: string[] }) {
@@ -125,8 +130,9 @@ function StepCard({ step }: { step: TreatmentStep }) {
   );
 }
 
-export default function ResultsView({ data, onBack }: Props) {
+export default function ResultsView({ data, onBack, caseInput, photoDataUrls }: Props) {
   const [copied, setCopied] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const copyToClipboard = async () => {
     try {
@@ -135,6 +141,17 @@ export default function ResultsView({ data, onBack }: Props) {
       setTimeout(() => setCopied(false), 2000);
     } catch {
       /* noop */
+    }
+  };
+
+  const handleSave = async () => {
+    if (!caseInput) return;
+    try {
+      await generateTreatmentPlanPDF(caseInput, photoDataUrls ?? {}, data);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      console.error('PDF generation failed:', err);
     }
   };
 
@@ -150,6 +167,23 @@ export default function ResultsView({ data, onBack }: Props) {
         </button>
         <div className="flex items-center gap-3">
           <ConfidenceBadge level={data.confidence_level} />
+          {caseInput && (
+            <button
+              onClick={handleSave}
+              disabled={saved}
+              className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                saved
+                  ? 'border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 cursor-default'
+                  : 'border-green-300 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-900/30 text-green-700 dark:text-green-400'
+              }`}
+            >
+              {saved ? (
+                <><Check className="w-3.5 h-3.5" /> Downloaded</>
+              ) : (
+                <><Download className="w-3.5 h-3.5" /> Save as PDF</>
+              )}
+            </button>
+          )}
           <button
             onClick={copyToClipboard}
             className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"

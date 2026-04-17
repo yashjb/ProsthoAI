@@ -1,4 +1,4 @@
-import type { APIResponse, CaseInput, ClinicalPhotos } from './types';
+import type { APIResponse, CaseInput, ClinicalPhotos, ShadeMatchingResponse } from './types';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
@@ -29,6 +29,24 @@ export async function analyzeCase(
   if (!res.ok) {
     const body = await res.json().catch(() => null);
     const detail = body?.detail ?? res.statusText;
+    throw new Error(`Server error (${res.status}): ${detail}`);
+  }
+
+  return res.json();
+}
+
+export async function analyzeShade(file: File): Promise<ShadeMatchingResponse> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const res = await fetch(`${API_BASE}/shade-matching`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    const detail = body?.error ?? body?.detail ?? res.statusText;
     throw new Error(`Server error (${res.status}): ${detail}`);
   }
 

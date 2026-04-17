@@ -20,6 +20,7 @@ const SECTIONS: { title: string; fields: FieldDef[] }[] = [
   {
     title: 'Patient Demographics',
     fields: [
+      { key: 'patient_name', label: 'Patient Name', placeholder: 'e.g. John Doe' },
       { key: 'patient_age', label: 'Patient Age', placeholder: 'e.g. 55 years' },
       { key: 'patient_sex', label: 'Patient Sex', placeholder: 'e.g. Male / Female / Other' },
     ],

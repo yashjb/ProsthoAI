@@ -3,10 +3,23 @@ import Header from './components/Header';
 import CaseForm from './components/CaseForm';
 import ResultsView from './components/ResultsView';
 import LoadingState from './components/LoadingState';
+import ShadeMatching from './components/ShadeMatching';
+import SavedPlans from './components/SavedPlans';
+import SavedShades from './components/SavedShades';
 import { analyzeCase } from './api';
 import type { CaseInput, ClinicalPhotos, TreatmentResponse } from './types';
 
-type View = 'form' | 'loading' | 'results';
+type View = 'form' | 'loading' | 'results' | 'shade' | 'saved-plans' | 'saved-shades';
+
+/** Convert a File to a base64 data URL */
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
 export default function App() {
   const [dark, setDark] = useState(() => {
@@ -18,6 +31,8 @@ export default function App() {
   const [view, setView] = useState<View>('form');
   const [result, setResult] = useState<TreatmentResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lastCaseInput, setLastCaseInput] = useState<CaseInput | null>(null);
+  const [lastPhotoDataUrls, setLastPhotoDataUrls] = useState<Record<string, string>>({});
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
@@ -29,6 +44,26 @@ export default function App() {
     setView('loading');
     setSubmitting(true);
     setError(null);
+    setLastCaseInput(caseData);
+
+    // Convert photos to base64 data URLs for saving later
+    const photoUrls: Record<string, string> = {};
+    for (const [key, value] of Object.entries(photos)) {
+      if (!value) continue;
+      if (Array.isArray(value)) {
+        for (let i = 0; i < value.length; i++) {
+          try {
+            photoUrls[`${key}_${i}`] = await fileToDataUrl(value[i]);
+          } catch { /* skip */ }
+        }
+      } else {
+        try {
+          photoUrls[key] = await fileToDataUrl(value);
+        } catch { /* skip */ }
+      }
+    }
+    setLastPhotoDataUrls(photoUrls);
+
     try {
       const res = await analyzeCase(caseData, photos);
       if (res.success && res.data) {
@@ -53,9 +88,33 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header dark={dark} onToggle={() => setDark(!dark)} />
+      <Header
+        dark={dark}
+        onToggle={() => setDark(!dark)}
+        onShadeMatch={() => setView(view === 'shade' ? 'form' : 'shade')}
+        shadeActive={view === 'shade'}
+        onSavedPlans={() => setView(view === 'saved-plans' ? 'form' : 'saved-plans')}
+        savedPlansActive={view === 'saved-plans'}
+        onSavedShades={() => setView(view === 'saved-shades' ? 'form' : 'saved-shades')}
+        savedShadesActive={view === 'saved-shades'}
+      />
 
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 pb-12">
+        {/* Shade Matching view */}
+        {view === 'shade' && (
+          <ShadeMatching onBack={() => setView('form')} />
+        )}
+
+        {/* Saved Plans view */}
+        {view === 'saved-plans' && (
+          <SavedPlans onBack={() => setView('form')} />
+        )}
+
+        {/* Saved Shades view */}
+        {view === 'saved-shades' && (
+          <SavedShades onBack={() => setView('form')} />
+        )}
+
         {/* Hero — only on form view */}
         {view === 'form' && (
           <div className="text-center mb-10">
@@ -72,7 +131,7 @@ export default function App() {
         )}
 
         {/* Error toast */}
-        {error && (
+        {error && view !== 'shade' && (
           <div className="mb-6 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 text-sm text-red-700 dark:text-red-300 shadow-sm">
             <strong>Error:</strong> {error}
           </div>
@@ -84,7 +143,12 @@ export default function App() {
         </div>
         {view === 'loading' && <LoadingState />}
         {view === 'results' && result && (
-          <ResultsView data={result} onBack={handleBack} />
+          <ResultsView
+            data={result}
+            onBack={handleBack}
+            caseInput={lastCaseInput ?? undefined}
+            photoDataUrls={lastPhotoDataUrls}
+          />
         )}
       </main>
 

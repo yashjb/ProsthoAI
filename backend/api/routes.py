@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, File, Form, UploadFile, HTTPException
+from fastapi import APIRouter, HTTPException, File, Form, UploadFile
+from fastapi.responses import JSONResponse
 
+from config.settings import settings
 from models.schemas import APIResponse, CaseInput
 from services.embedding_store import retrieve as retrieve_chunks
 from services.image_processor import process_image_for_openai
@@ -152,3 +155,119 @@ async def analyze_case(
     # ── 6. Validate & return ─────────────────────────────────────────────
     treatment = validate_response(raw_response)
     return APIResponse(success=True, data=treatment)
+
+
+# ── Shade Matching Endpoint ──────────────────────────────────────────────
+
+@router.post("/shade-matching")
+async def shade_matching(file: UploadFile = File(...)):
+    """Analyze a dental image and return shade matching information."""
+    try:
+        # Validate file is an image (allow common image/* types and RAW formats
+        # identified by extension: DNG, CR2, NEF, ARW, etc.)
+        raw_exts = {".dng", ".cr2", ".cr3", ".nef", ".arw", ".orf", ".raf", ".rw2"}
+        filename_ext = os.path.splitext(file.filename or "")[1].lower()
+        is_raw = filename_ext in raw_exts
+        content_type = file.content_type or ""
+        if not content_type.startswith("image/") and not is_raw:
+            return JSONResponse(
+                status_code=400,
+                content={"error": "File must be an image (PNG, JPEG, GIF, WEBP, DNG, or other RAW format)"},
+            )
+
+        # Read uploaded bytes and convert to JPEG via the shared image processor
+        # (handles DNG/RAW formats, resizes, and ensures OpenAI-compatible encoding)
+        contents = await file.read()
+        filename = file.filename or "image"
+
+        logger.info("Shade matching: processing %s (%d bytes)", filename, len(contents))
+
+        image_part = process_image_for_openai(contents, filename)
+        if image_part is None:
+            return JSONResponse(
+                status_code=422,
+                content={"error": "Could not process the uploaded image. Please upload a valid dental photograph."},
+            )
+
+        # image_part["image_url"]["url"] is already a data:image/jpeg;base64,… string
+        jpeg_data_url = image_part["image_url"]["url"]
+
+        # Use the shared OpenAI client from openai_service
+        from services.openai_service import _get_client
+
+        client = _get_client()
+
+        response = client.chat.completions.create(
+            model=settings.vision_model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a dental shade matching expert. Analyze the teeth in the image "
+                        "and provide detailed shade information for creating dental crowns.\n\n"
+                        "Detect whether the image was taken under lighting with a color temperature "
+                        "around 5500 Kelvin (daylight-balanced) or under natural light conditions, "
+                        "and consider how this may affect shade perception.\n\n"
+                        "Provide your response in the following JSON format:\n"
+                        "{\n"
+                        '  "primary_shade": "The main shade code (e.g., A1, B2, C3)",\n'
+                        '  "shade_family": "The shade family (A, B, C, or D)",\n'
+                        '  "value": "Light, Medium, or Dark",\n'
+                        '  "chroma": "Low, Medium, or High intensity",\n'
+                        '  "hue": "Reddish-brown, Reddish-yellow, Gray, or Reddish-gray",\n'
+                        '  "recommended_shades": ["List of 3-5 closest matching shade codes"],\n'
+                        '  "notes": "Additional observations about the tooth color, translucency, '
+                        'and any special considerations for crown matching, including lighting '
+                        'conditions and their impact",\n'
+                        '  "confidence": "High, Medium, or Low confidence in the shade assessment"\n'
+                        "}\n\n"
+                        "Be specific and professional in your analysis."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": (
+                                "Analyze this dental image and provide detailed shade matching "
+                                "information for crown creation. Focus on the teeth visible in "
+                                "the image and determine the best shade match."
+                            ),
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": jpeg_data_url},
+                        },
+                    ],
+                },
+            ],
+        )
+
+        # Extract and clean the response
+        shade_analysis_raw = response.choices[0].message.content or ""
+        shade_analysis = shade_analysis_raw.strip()
+        if shade_analysis.startswith("```json"):
+            shade_analysis = shade_analysis[7:]
+        if shade_analysis.startswith("```"):
+            shade_analysis = shade_analysis[3:]
+        if shade_analysis.endswith("```"):
+            shade_analysis = shade_analysis[:-3]
+        shade_analysis = shade_analysis.strip()
+
+        logger.info("Shade analysis completed successfully")
+
+        return {
+            "success": True,
+            "image_data": jpeg_data_url,
+            "shade_analysis": shade_analysis,
+            "filename": filename,
+        }
+
+    except Exception as exc:
+        logger.error("Shade matching failed: %s", exc, exc_info=True)
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"Shade analysis failed: {exc}"},
+        )
+ 

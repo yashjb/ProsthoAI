@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field, field_validator
 class CaseInput(BaseModel):
     """Clinical case details from the input form."""
 
+    patient_name: str = ""
     patient_age: str = ""
     patient_sex: str = ""
     chief_complaint: str = ""

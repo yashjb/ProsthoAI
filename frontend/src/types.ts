@@ -1,6 +1,7 @@
 /* ── Types matching the backend JSON schema ── */
 
 export interface CaseInput {
+  patient_name: string;
   patient_age: string;
   patient_sex: string;
   chief_complaint: string;
@@ -25,6 +26,7 @@ export interface CaseInput {
 }
 
 export const emptyCaseInput: CaseInput = {
+  patient_name: '',
   patient_age: '',
   patient_sex: '',
   chief_complaint: '',
@@ -178,4 +180,26 @@ export interface APIResponse {
   success: boolean;
   data: TreatmentResponse | null;
   error: string | null;
+}
+
+/* ── Shade matching types ── */
+
+export interface ShadeAnalysis {
+  primary_shade?: string;
+  shade_family?: string;
+  value?: string;
+  chroma?: string;
+  hue?: string;
+  recommended_shades?: string[];
+  notes?: string;
+  confidence?: string;
+  raw_analysis?: string;
+}
+
+export interface ShadeMatchingResponse {
+  success: boolean;
+  image_data?: string;
+  shade_analysis?: string;
+  filename?: string;
+  error?: string;
 }

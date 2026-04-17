@@ -35,3 +35,4 @@ dental_knowledge.db
 
 # Sensitive local scripts
 backend/testkey.py
+/shades
